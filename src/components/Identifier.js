@@ -63,7 +63,7 @@ export default function SignUp(props) {
   const signIn = async (nm) => {
     //User info
     const payload = {
-      nm: nm,
+      nm: "NM" + nm,
     };
     //Server Response
     const response = await axios.post("/admin/", payload);

@@ -49,7 +49,7 @@ export default withRouter(function SignIn({ usuarioActual }) {
   //States for the component
   const [user, setuser] = useState({
     name: ctx.usuarioActual ? ctx.usuarioActual : "",
-    nm: ctx.nmActual ? ctx.nmActual : "",	  
+    nm: ctx.nmActual ? ctx.nmActual : "",
     failedAttemps: ctx.failedAttemps,
     password: "",
     department: "",
@@ -76,6 +76,8 @@ export default withRouter(function SignIn({ usuarioActual }) {
     try {
       //We check if user is currently not blocked to make the request
       if (ctx.userStatus === "active") {
+        //let parsedNm = nm.substring(2);
+
         const payload = { name, password, nm };
         //Server Response
         const response = await axios.post("/admin/signIn", payload);
@@ -98,8 +100,10 @@ export default withRouter(function SignIn({ usuarioActual }) {
         } else if (message === "approved") {
           setinvalidCredentials(false);
           setuser({ ...user, department: response.data.department });
+          ctx.setuserAditionalInfo({ ...response.data });
+
+          //console.log("This is the whole response that I'm getting", response);
           ctx.settimerForJwt(!ctx.timerForJwt);
-          ctx.setuserAditionalInfo({...response.data});		
           const messageText =
             "Usuario logeado " + ctx.usuarioActual + " con exito en local";
           //We register the corresponding Log
@@ -220,18 +224,18 @@ export default withRouter(function SignIn({ usuarioActual }) {
 
   //We reditect to the next authentication phase
   const redirectToHomePage = (response = null) => {
+    //history.replace("/doubleAuth");
     history.replace("/signInLDAP");
-    
-     let department;
-     if (response !== null) {
-       department = response.data.department;
-     } else {
-       department = user.department;
-     }
-     //if (department === "Administración") {
-     //  history.replace("/HomeOperations");
-     //} else if (department === "Operaciones") {
-     //  history.replace("/HomeAdmin");
+    // let department;
+    // if (response !== null) {
+    //   department = response.data.department;
+    // } else {
+    //   department = user.department;
+    // }
+    // if (department === "Administración") {
+    //   history.replace("/HomeOperations");
+    // } else if (department === "Operaciones") {
+    //   history.replace("/HomeAdmin");
     // }
   };
   const cancelFormFunction = (e) => {
@@ -341,16 +345,16 @@ export default withRouter(function SignIn({ usuarioActual }) {
             <TextField
               onChange={(e) => {
                 //setusuario(e.target.value);
-                // setuser({ ...user, name: e.target.value });
+                setuser({ ...user, nm: e.target.value });
               }}
               onBlur={onBlurHandler}
               variant="outlined"
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email"
-              name="email"
+              id="nm"
+              label="NM"
+              name="nm"
               autoComplete="email"
               //autoFocus
               value={user.nm}

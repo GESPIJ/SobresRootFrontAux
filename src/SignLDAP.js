@@ -47,6 +47,7 @@ export default withRouter(function SignIn({ usuarioActual }) {
   //States for the component
   const [user, setuser] = useState({
     name: ctx.usuarioActual ? ctx.usuarioActual : "",
+    nm: ctx.nmActual ? ctx.nmActual : "",
     failedAttemps: ctx.failedAttemps,
     password: "",
     department: "",
@@ -79,12 +80,12 @@ export default withRouter(function SignIn({ usuarioActual }) {
       if (ctx.userStatus === "active") {
         const payload = { user: userDomain, password };
         //debugger;
-	console.log("El usuario que estoy mandando es ");
-	console.log(userDomain);
-	console.log("Y la clave es", password);      
+        console.log("El usuario que estoy mandando es ");
+        console.log(userDomain);
+        console.log("Y la clave es", password);
         const response = await axios.post("/admin/signInLDAP", payload);
         //const response = await axios.post("/admin/signInLDAP", payload);
-	console.log("Esta es la respuesta que obtengo del directorio Activo");
+        console.log("Esta es la respuesta que obtengo del directorio Activo");
         console.log(response);
         //debugger;
 
@@ -230,20 +231,20 @@ export default withRouter(function SignIn({ usuarioActual }) {
   };
 
   const redirectToHomePage = (response = null) => {
-   let department = ctx.userAditionalInfo.department;	  
-   // history.replace("/signIn");
+    let department = ctx.userAditionalInfo.department;
+    // history.replace("/signIn");
     // if (response !== null) {
     //   department = response.data.department;
     // } else {
     //   department = user.department;
     // }
-	  //
-     history.replace("/doubleAuth")
-   //  if (department === "Administración") {
-   //    history.replace("/HomeOperations");
-   //  } else if (department === "Operaciones") {
-   //    history.replace("/HomeAdmin");
-   //  }
+    //
+    history.replace("/doubleAuth");
+    //  if (department === "Administración") {
+    //    history.replace("/HomeOperations");
+    //  } else if (department === "Operaciones") {
+    //    history.replace("/HomeAdmin");
+    //  }
   };
   const cancelFormFunction = (e) => {
     setchangeOldPassword(false);
@@ -363,12 +364,12 @@ export default withRouter(function SignIn({ usuarioActual }) {
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email"
-              name="email"
-              autoComplete="email"
+              id="nm"
+              label="NM"
+              name="nm"
+              autoComplete="nm"
               //autoFocus
-              value={user.name}
+              value={user.nm}
             />
             {/* {invalidEmail && (
               <p style={{ color: "red", textAlign: "left" }}>Invalid email </p>
