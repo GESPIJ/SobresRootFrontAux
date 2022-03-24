@@ -123,36 +123,50 @@ export default function SignUp() {
     };
 
     //Server Response
-    const response = await axios.post("/admin/register", payload);
 
-    if (response.data.message === "Autorizado") {
-      const messageText =
-        "Nuevo usuario " +
-        name +
-        " " +
-        lastname +
-        " con nm " +
-        nm +
-        ", registrado con exito por parte del usuario " +
-        ctx.usuarioActual +
-        " con nm " +
-        ctx.nmActual +
-        " perteneciente al departamento de seguridad";
+    let validationFields = {
+      nm: validateNm(user.nm),
+      email: validateEmail(user.email),
+      password: validatePassword(user.password),
+    };
+    if (
+      validationFields.nm &&
+      validationFields.password &&
+      validationFields.nm
+    ) {
+      const response = await axios.post("/admin/register", payload);
 
-      //If we success creating the user we register the corresponding log on the DB
-      await axios.post("/admin/registerLog", {
-        message: messageText,
-        solitude: null,
-      });
+      if (response.data.message === "Autorizado") {
+        const messageText =
+          "Nuevo usuario " +
+          name +
+          " " +
+          lastname +
+          " con nm " +
+          nm +
+          ", registrado con exito por parte del usuario " +
+          ctx.usuarioActual +
+          " con nm " +
+          ctx.nmActual +
+          " perteneciente al departamento de seguridad";
 
-      displaySnackbar("success", response.data.content);
-    } else if (response.data.message === "Unauthorized") {
-      setvalidData({
-        ...validData,
-        password: true,
-        message: "Usted no esta autorizaod",
-      });
-      displaySnackbar("error", response.data.content);
+        //If we success creating the user we register the corresponding log on the DB
+        await axios.post("/admin/registerLog", {
+          message: messageText,
+          solitude: null,
+        });
+
+        displaySnackbar("success", response.data.content);
+      } else if (response.data.message === "Unauthorized") {
+        setvalidData({
+          ...validData,
+          password: true,
+          message: "Usted no esta autorizaod",
+        });
+        displaySnackbar("error", response.data.content);
+      }
+    } else {
+      displaySnackbar("error", "Al menos alguno de los campos no es valido");
     }
   };
 

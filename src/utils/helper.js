@@ -82,11 +82,11 @@ export const verifyNameLastName = (e) => {
 export const validatePassword = (password) => {
   console.log(password);
   //const re = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
-  //const re = /^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$/;
+  // const re = /^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$/;
 
   //Minimum eight characters, at least one uppercase letter, one lowercase letter and one number
   const re =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_-])[A-Za-z\d@$!%*?&]{8,}$/;
   return re.test(String(password));
 };
 
@@ -98,6 +98,9 @@ export const validateEmail = (email) => {
   return re1.test(String(email).toLowerCase());
 };
 export const validateNm = (nm) => {
-  let re = /[0-9]{6}/;
-  return re.test(String(nm).toLowerCase());
+  let re = /[nm|ct][0-9]{6}$/;
+  let re1 = /[ct][0-9]{5}$/;
+  return (
+    re.test(String(nm).toLowerCase()) || re1.test(String(nm).toLowerCase())
+  );
 };

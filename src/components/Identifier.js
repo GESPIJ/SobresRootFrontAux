@@ -63,7 +63,8 @@ export default function SignUp(props) {
   const signIn = async (nm) => {
     //User info
     const payload = {
-      nm: "NM" + nm,
+      //nm: nm != 0 ? "NM" + nm : "0",
+      nm: nm,
     };
     //Server Response
     const response = await axios.post("/admin/", payload);
@@ -117,7 +118,7 @@ export default function SignUp(props) {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={12}>
                 <InputMask
-                  mask="999999"
+                  mask="aa999999"
                   maskChar={null}
                   error={validateInfo.password}
                   //helperText={validateInfo.password ? "El nm no existe" : ""}
