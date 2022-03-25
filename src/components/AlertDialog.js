@@ -98,7 +98,7 @@ const useStylesForm = makeStyles((theme) => ({
   },
 }));
 
-function AlerttDialog({ title, cancelFunction, confirmFunction }) {
+function AlerttDialog({ title, cancelFunction, confirmFunction, description }) {
   const handleConfirm = () => {
     confirmFunction(false);
   };
@@ -123,6 +123,18 @@ function AlerttDialog({ title, cancelFunction, confirmFunction }) {
         >
           {title}
         </DialogTitle>
+        {description && (
+          <DialogContent
+          //className={classesFormDialog.root}
+          >
+            <DialogContentText
+              id="alert-dialog-description"
+              className={classesFormDialog.textJustified}
+            >
+              {description}
+            </DialogContentText>
+          </DialogContent>
+        )}
 
         <DialogActions className={classesFormDialog.root}>
           <Button

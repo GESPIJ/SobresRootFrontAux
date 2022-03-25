@@ -12,6 +12,7 @@ import moment from "moment";
 import Boton from "./boton";
 import SnackAlert from "./SnackBarAlert";
 import FormDialog from "./components/FormDialogInput";
+import { validatePassword } from "./utils/helper";
 
 //Internal Components and modules
 import BarraNavegacion from "./components/BarraNavegacion";
@@ -243,22 +244,36 @@ export default withRouter(function SignIn({ usuarioActual }) {
   };
 
   const confirmFormFunction = async (e) => {
+    let newPassword = newPasswordField.newPassword;
     let payload = {
       newPassword: newPasswordField.newPassword,
       name: user.name,
       //nm: "123456",
     };
-    const response = await axios.post("/admin/updateUserPassword", payload);
-    if (response.data.message === "succesfully") {
-      setchangeOldPassword(false);
+
+    let validatedPassword = validatePassword(newPassword);
+    if (validatedPassword) {
+      const response = await axios.post("/admin/updateUserPassword", payload);
+      if (response.data.message === "succesfully") {
+        setchangeOldPassword(false);
+        setAlertMessage({
+          ...AlertMessage,
+          state: true,
+          title: "Clave cambiada correctamente",
+          //description: "Change_Old_Password",
+        });
+      } else {
+      }
+    } else {
       setAlertMessage({
         ...AlertMessage,
         state: true,
-        title: "Clave cambiada correctamente",
-        description: "Change_Old_Password",
+        title: "Por favor seleccione una clave mejor",
+        description:
+          "La clave no cumple con los estandares de seguridad requeridos. Recuerde que debe ser de minimo 8 caracteres y contar con una mayuscula, minuscula, numero y caracter especial",
       });
-    } else {
     }
+
     //setchangeOldPassword(false);
   };
 
@@ -327,6 +342,7 @@ export default withRouter(function SignIn({ usuarioActual }) {
           //cancelFunction={AlertMessage.cancelFunction}
           confirmFunction={confirmAlertFunction}
           cancelFunction={cancelAlertFunction}
+          description={AlertMessage.description}
         />
       )}
 
