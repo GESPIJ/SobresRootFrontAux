@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { useHistory } from "react-router-dom";
-import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import {
@@ -22,7 +21,6 @@ import moment from "moment";
 
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 //Importamos las alertas y dialogos
-import AlertDialog from "./../AlertDialog";
 import InputDialog from "./../FormDialogContentText";
 import { convertDateToHumanReadable } from "../../utils/helper";
 import MyContext from "../../context/mycontext";
@@ -211,10 +209,13 @@ export default function Orders({ solitudes }) {
       }, 2000);
     } else {
       solitudes.forEach((solitude) => {
+        //Probar si esto esta funcionando
         solitude.state = "Finished";
       });
-
-      settimer((prev) => !prev);
+      setTimeout(() => {
+        setloading(false);
+        settimer((prev) => !prev);
+      }, 200);
     }
 
     //debugger;

@@ -10,16 +10,12 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import MyContext from "../../context/mycontext";
-import {
-  AppBar,
-  Toolbar,
-  IconButton,
-  Select,
-  FormControl,
-  InputLabel,
-  MenuItem,
-} from "@material-ui/core";
+import { Select, FormControl, InputLabel, MenuItem } from "@material-ui/core";
 import moment from "moment";
+
+//Import methods and internal project functions
+//For validating the NM
+import { validateNm } from "../../utils/helper";
 
 import BarraNavegacion from "../BarraNavegacion";
 
@@ -62,23 +58,15 @@ export default function SignUp() {
   const ctx = useContext(MyContext);
   const history = useHistory();
   const [systems, setSystems] = useState({ systems: [], selectedSystem: "" });
-  const [solitudes, setsolitudes] = useState([]);
+  //const [solitudes, setsolitudes] = useState([]);
   const [userData, setuserData] = useState({ nm: "", motivo: "" });
 
   const [validData, setvalidData] = useState({
-    email: true,
-    nm: false,
-    password: false,
+    nm: true,
   });
   const classes = useStyles();
 
   //Component Functions
-
-  //For validating the current nm
-  const validateNm = (nm) => {
-    let re = /nm[0-9]{6}/;
-    return re.test(String(nm).toLowerCase());
-  };
 
   const fetchSolitudes = async () => {
     //Obtenemos todas las solicitudes vigentes del servidor.
@@ -95,7 +83,7 @@ export default function SignUp() {
     );
 
     //Guardamos las solicitudes
-    setsolitudes(filterSolitudes);
+    // setsolitudes(filterSolitudes);
 
     //Retornamos las solicitudes
     return filterSolitudes;
@@ -244,6 +232,16 @@ export default function SignUp() {
                   fullWidth
                   id="nm"
                   label="NM"
+                  error={!validData.nm}
+                  helperText={
+                    !validData.nm ? "El nm introducido no es válido" : ""
+                  }
+                  onBlur={() => {
+                    setvalidData((prev) => ({
+                      ...prev,
+                      nm: validateNm(userData.nm),
+                    }));
+                  }}
                   autoFocus
                   onChange={(e) => {
                     setuserData({ ...userData, nm: e.target.value });
