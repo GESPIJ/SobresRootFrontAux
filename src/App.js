@@ -9,7 +9,6 @@ import {
   useHistory,
 } from "react-router-dom";
 import "./App.css";
-import Formulario from "./formulario";
 import MyContext, { MyCustomContext } from "./context/mycontext";
 import LoginLDAP from "./LoginLDAP";
 import SignIn from "./Signin";
@@ -55,20 +54,6 @@ function App() {
   const [clickOnStay, setclickOnStay] = useState(false);
   const [showConfirmDialog, setshowConfirmDialog] = useState(false);
 
-  const imprimirConsola = () => {
-    console.log("Just printing!!");
-  };
-
-  const guardarValoresNavegador = (datos) => {
-    //debugger;
-    console.log("Tres");
-    if (!window.localStorage.getItem("usuario")) {
-      window.localStorage.setItem("usuario", datos.usuario);
-      window.localStorage.setItem("counter", datos.counter);
-    }
-    window.localStorage.setItem("usuario", datos.usuario);
-    window.localStorage.setItem("counter", datos.counter);
-  };
   const cerrandoTab = async () => {
     if (!windowAboutToClose.current) {
       windowAboutToClose.current = true;
@@ -94,6 +79,25 @@ function App() {
   function sleep(ms) {
     return new Promise((resolve) => window.setTimeout(resolve, ms));
   }
+
+  const registerNewToken = async () => {
+    const response = await axios.get("/admin/generateNewToken");
+    window.localStorage.setItem("code", response.data.message);
+
+    await axios.post("/admin/updateJWToken", {
+      name: ctx.usuarioActual,
+      code: response.data.message,
+    });
+
+    const messageText =
+      "El usuario " + ctx.usuarioActual + " registro un nuevo token";
+    await axios.post("/admin/registerLog", {
+      message: messageText,
+      solitude: null,
+    });
+
+    ctx.settimerForJwt((prev) => !prev);
+  };
 
   useEffect(() => {
     if (clickOnStay) {
@@ -144,26 +148,14 @@ function App() {
 
   useEffect(() => {
     if (firstTimeTimerToken.current) {
-      console.log("BOOOM se disparo el timer que espera a cambiar el codigo");
+      //console.log("BOOOM se disparo el timer que espera a cambiar el codigo");
       setTimeout(async () => {
-        const response = await axios.get("/admin/generateNewToken");
-        console.log(response.data);
-        window.localStorage.setItem("code", response.data.message);
-        const response2 = await axios.post("/admin/updateJWToken", {
-          name: ctx.usuarioActual,
-          code: response.data.message,
-        });
-        const messageText =
-          "El usuario " + ctx.usuarioActual + " registro un nuevo token";
-        await axios.post("/admin/registerLog", {
-          message: messageText,
-          solitude: null,
-        });
-        console.log(response2);
+        await registerNewToken();
         ctx.settimerForJwt((prev) => !prev);
       }, 120000);
     } else {
       firstTimeTimerToken.current = true;
+      registerNewToken();
     }
   }, [ctx.timerForJwt]);
 
