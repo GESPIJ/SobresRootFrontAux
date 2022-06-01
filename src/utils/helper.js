@@ -86,7 +86,7 @@ export const validatePassword = (password) => {
 
   //Minimum eight characters, at least one uppercase letter, one lowercase letter and one number
   const re =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_-])[A-Za-z\d@$!%*?&]{8,}$/;
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$\#!%*+?&\-\_\(\)])[A-Za-z\d@$!#+*\-\_\(\)%*?&]{8,}$/;
   return re.test(String(password));
 };
 

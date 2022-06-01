@@ -83,6 +83,12 @@ export default withRouter(function SignIn({ usuarioActual }) {
         //Server Response
         const response = await axios.post("/admin/signIn", payload);
 
+        const result = await axios.post("/admin/updateUserFailedAttemps", {
+          nm: ctx.nmActual,
+          failedAttemps: 0,
+          reset: true,
+        });
+
         let message = response.data.message;
 
         //If the user is connected from a wrong ip that the previous assigned we display a message
@@ -102,6 +108,10 @@ export default withRouter(function SignIn({ usuarioActual }) {
           setinvalidCredentials(false);
           setuser({ ...user, department: response.data.department });
           ctx.setuserAditionalInfo({ ...response.data });
+          console.log(
+            "This is the response data----------------------------------------------------"
+          );
+          console.log({ ...response.data });
 
           //console.log("This is the whole response that I'm getting", response);
           ctx.settimerForJwt(!ctx.timerForJwt);
@@ -127,7 +137,7 @@ export default withRouter(function SignIn({ usuarioActual }) {
             const responseFailedAttemps = await axios.post(
               "/admin/updateUserFailedAttemps",
               {
-                name: ctx.usuarioActual,
+                nm: ctx.nmActual,
                 failedAttemps: ctx.failedAttemps,
                 reset: true,
               }
@@ -169,6 +179,16 @@ export default withRouter(function SignIn({ usuarioActual }) {
               ctx.nmActual +
               tryText;
 
+            const responseFailedAttemps = await axios.post(
+              "/admin/updateUserFailedAttemps",
+              {
+                nm: ctx.nmActual,
+                name: ctx.usuarioActual,
+                failedAttemps: ctx.failedAttemps,
+                reset: false,
+              }
+            );
+
             //We register the corresponding Log
             const response = axios.post("/admin/registerLog", {
               solitude: null,
@@ -186,6 +206,7 @@ export default withRouter(function SignIn({ usuarioActual }) {
             const responseFailedAttemps = await axios.post(
               "/admin/updateUserFailedAttemps",
               {
+                nm: ctx.nmActual,
                 name: ctx.usuarioActual,
                 failedAttemps: ctx.failedAttemps,
                 reset: false,
@@ -225,6 +246,7 @@ export default withRouter(function SignIn({ usuarioActual }) {
 
   //We reditect to the next authentication phase
   const redirectToHomePage = (response = null) => {
+    debugger;
     //history.replace("/doubleAuth");
     history.replace("/signInLDAP");
     // let department;
@@ -254,6 +276,7 @@ export default withRouter(function SignIn({ usuarioActual }) {
     let validatedPassword = validatePassword(newPassword);
     if (validatedPassword) {
       const response = await axios.post("/admin/updateUserPassword", payload);
+      debugger;
       if (response.data.message === "succesfully") {
         setchangeOldPassword(false);
         setAlertMessage({
@@ -278,8 +301,12 @@ export default withRouter(function SignIn({ usuarioActual }) {
   };
 
   const confirmAlertFunction = () => {
+    debugger;
     setAlertMessage({ ...AlertMessage, state: false });
-    if (AlertMessage.description === "Change_Old_Password") {
+    if (
+      AlertMessage.description === "Change_Old_Password" ||
+      AlertMessage.title == "Clave cambiada correctamente"
+    ) {
       redirectToHomePage();
     }
     // else if (AlertMessage.description === "Invalid Password"){
