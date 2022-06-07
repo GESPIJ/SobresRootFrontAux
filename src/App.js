@@ -82,6 +82,9 @@ function App() {
 
   const registerNewToken = async () => {
     const response = await axios.get("/admin/generateNewToken");
+    console.log("The user registered a new token and this is the new data!!!");
+    console.log(response);
+	  
     window.localStorage.setItem("code", response.data.message);
 
     await axios.post("/admin/updateJWToken", {

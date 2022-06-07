@@ -100,7 +100,8 @@ export const validateEmail = (email) => {
 export const validateNm = (nm) => {
   let re = /[nm|ct][0-9]{6}$/;
   let re1 = /[ct][0-9]{5}$/;
+  let re2 = /[nm][0-9]{5}/	
   return (
-    re.test(String(nm).toLowerCase()) || re1.test(String(nm).toLowerCase())
+    re.test(String(nm).toLowerCase()) || re1.test(String(nm).toLowerCase()) || re2.test(String(nm).toLowerCase())
   );
 };

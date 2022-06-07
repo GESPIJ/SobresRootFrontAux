@@ -73,7 +73,7 @@ export default function SignUp() {
 
   const solicitarCodigo = async () => {
     const payload = {
-      nm: "123456",
+      nm: ctx.nmActual,
     };
     //debugger;
     const response = await axios.post(
@@ -92,7 +92,7 @@ export default function SignUp() {
   const signIn = async (nm) => {
     console.log("Enviando codigo al servidor");
     const payload = {
-      nm: "123456",
+      nm: ctx.nmActual,
       codigoAcceso: accessCode,
     };
 

@@ -76,7 +76,7 @@ export default withRouter(function SignIn({ usuarioActual }) {
     console.log("Llamando a la funcion signin");
     try {
       //debugger;
-      let userDomain = name + "@Banvendes.corp";
+      let userDomain = user.nm + "@Banvendes.corp";
       if (ctx.userStatus === "active") {
         const payload = { user: userDomain, password };
         //debugger;

@@ -1,7 +1,7 @@
 {
   "name": "bancoapp",
   "version": "0.1.0",
-  "proxy": "http://localhost:5000",
+  "proxy": "http://180.183.178.206:4000",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11.4",
