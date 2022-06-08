@@ -122,7 +122,9 @@ export default withRouter(function SignIn({ usuarioActual }) {
             solitude: null,
             message: messageText,
           });
-          window.localStorage.setItem("code", response.data.authorizationCode);
+
+          ctx.setcurrentJWT(response.data.authorizationCode);
+          // window.localStorage.setItem("code", response.data.authorizationCode);
 
           //La fecha fue modificada para compatibilidad con Mozilla Firefox, ya que Chrome si hace el parse automáticamente.
           let lastPasswordChange = moment(

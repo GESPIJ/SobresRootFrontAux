@@ -17,7 +17,8 @@ export const MyCustomContext = (props) => {
   const [isSuccesfullyLogged, setisSuccesfullyLogged] = useState(false);
   const [timerForJwt, settimerForJwt] = useState(false);
   const [currentSolitude, setcurrentSolitude] = useState({});
-  const [userAditionalInfo, setuserAditionalInfo] = useState({});	
+  const [userAditionalInfo, setuserAditionalInfo] = useState({});
+  const [currentJWT, setcurrentJWT] = useState(null);
 
   const cerrandoTab = async (windowAboutToClose) => {
     if (!windowAboutToClose.current) {
@@ -64,13 +65,16 @@ export const MyCustomContext = (props) => {
         setisSuccesfullyLogged: setisSuccesfullyLogged,
         logOut: logOut,
         logIn: logIn,
-	
+
         userAditionalInfo: userAditionalInfo,
-        setuserAditionalInfo: setuserAditionalInfo,		      
+        setuserAditionalInfo: setuserAditionalInfo,
 
         cerrandoTab: cerrandoTab,
         timerForJwt: timerForJwt,
         settimerForJwt: settimerForJwt,
+
+        currentJWT: currentJWT,
+        setcurrentJWT: setcurrentJWT,
       }}
     >
       {props.children}

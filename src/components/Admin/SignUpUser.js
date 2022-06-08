@@ -60,7 +60,9 @@ export default function SignUp() {
   const ctx = useContext(MyContext);
   const classes = useStyles();
   const history = useHistory();
-  const codigoAutorizacion = window.localStorage.getItem("code");
+  //const codigoAutorizacion = window.localStorage.getItem("code");
+
+  const codigoAutorizacion = ctx.currentJWT;
 
   //Component States
   const [user, setuser] = useState({
