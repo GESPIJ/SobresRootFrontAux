@@ -76,10 +76,7 @@ export default function SignUp() {
       nm: ctx.nmActual,
     };
     //debugger;
-    const response = await axios.post(
-      "/admin/solitudeCode",
-      payload
-    );
+    const response = await axios.post("/admin/solitudeCode", payload);
     console.log(response);
   };
 
@@ -96,10 +93,7 @@ export default function SignUp() {
       codigoAcceso: accessCode,
     };
 
-    const response = await axios.post(
-      "/admin/validateCode",
-      payload
-    );
+    const response = await axios.post("/admin/validateCode", payload);
     console.log(response);
     //debugger;
     let currentDate = new Date();
@@ -107,7 +101,11 @@ export default function SignUp() {
 
     let isOlder = currentDate.isAfter(response.data.tiempoCaducacion);
     if (response.data.message == "succesfully") {
-      history.push("/HomeOperations");
+      let redirectPath =
+        response.data.department === "Administración"
+          ? "HomeAdmin"
+          : "Home Operations";
+      history.replace(redirectPath);
       //   ctx.setusuarioActual(response.data.name);
       //   history.push("/signIn");
     } else {
