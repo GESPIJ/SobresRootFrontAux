@@ -103,8 +103,8 @@ export default function SignUp() {
     if (response.data.message == "succesfully") {
       let redirectPath =
         response.data.department === "Administración"
-          ? "HomeAdmin"
-          : "Home Operations";
+          ? "HomeOperations"
+          : "HomeAdmin";
       history.replace(redirectPath);
       //   ctx.setusuarioActual(response.data.name);
       //   history.push("/signIn");
