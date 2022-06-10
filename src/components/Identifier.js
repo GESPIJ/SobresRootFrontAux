@@ -64,7 +64,7 @@ export default function SignUp(props) {
     //User info
     const payload = {
       //nm: nm != 0 ? "NM" + nm : "0",
-      nm: nm,
+      nm: nm.toUpperCase(),
     };
     //Server Response
     const response = await axios.post("/admin/", payload);

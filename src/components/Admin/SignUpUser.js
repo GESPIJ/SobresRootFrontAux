@@ -116,7 +116,7 @@ export default function SignUp() {
       lastname,
       email,
       password,
-      nm,
+      nm: nm.toUpperCase(),
       department,
       codigoAcceso: null,
       caducacionCodigo: actualDate,
