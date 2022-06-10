@@ -101,8 +101,9 @@ export default function SignUp() {
 
     let isOlder = currentDate.isAfter(response.data.tiempoCaducacion);
     if (response.data.message == "succesfully") {
+      console.log(response.data.department);
       let redirectPath =
-        response.data.department === "Administración"
+        response.data.department == "Administración"
           ? "HomeOperations"
           : "HomeAdmin";
       history.replace(redirectPath);
