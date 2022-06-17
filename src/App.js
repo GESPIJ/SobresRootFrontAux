@@ -190,11 +190,25 @@ function App() {
 
   useEffect(() => {
     if (newEnvelopeRequest) {
+      console.log("This is the ctx!!!");
+      console.log(ctx);
+
+      //debugger;
+      let newSnackBarsArray = [
+        ...snackBars,
+        {
+          open: true,
+          content: "A new root envelope solitude has been processed",
+          severity: "success",
+        },
+      ];
+
+      setSnackBars(newSnackBarsArray);
       setnewEnvelopeRequest(false);
-      displaySnackbar(
-        "success",
-        "Nueva solicitud de sobre root registrada desde el usuario!!!"
-      );
+      // displaySnackbar(
+      //   "success",
+      //   "Nueva solicitud de sobre root registrada desde el usuario!!!"
+      // );
     }
   }, [newEnvelopeRequest]);
 
@@ -215,7 +229,7 @@ function App() {
         "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
       );
       console.log(parameter);
-      debugger;
+      //debugger;
       console.log("There was received a new root envelope from another user!!");
       setnewEnvelopeRequest(true);
     });
@@ -318,32 +332,67 @@ function App() {
           )}
 
           {/* {ctx && ctx.department === "Administración" && newEnvelopeRequest && <Snackbar>>} */}
-          {ctx && (
-            <Snackbar
-              anchorOrigin={{ vertical: "top", horizontal: "center" }}
-              open={snackBars.open}
-              autoHideDuration={10000}
-              onClose={(e) => {
-                setSnackBars({ open: false, content: "", severity: "success" });
-                // if (snackBars.severity === "success") {
-                //   history.replace("/HomeOperations");
-                // }
-                // setsnackBars({ ...snackBars, open: false });
-              }}
-            >
-              {
-                <Alert
+          {ctx &&
+            snackBars.length > 0 &&
+            ctx.userAditionalInfo.department == "Administración" &&
+            snackBars.map((snackbar, index) => {
+              return (
+                <Snackbar
+                  anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                  open={snackbar.open}
+                  //autoHideDuration={10000}
                   onClose={(e) => {
-                    setSnackBars({ ...snackBars, open: false });
+                    let newSnackBarsArray = [...snackBars];
+                    console.log("I'm closing this snackbar", index);
+                    debugger;
+                    newSnackBarsArray[index] = {
+                      ...newSnackBarsArray[index],
+                      open: false,
+                    };
+                    setSnackBars(newSnackBarsArray);
+                    // setSnackBars({
+                    //   open: false,
+                    //   content: "",
+                    //   severity: "success",
+                    // });
+                    // if (snackBars.severity === "success") {
+                    //   history.replace("/HomeOperations");
+                    // }
+                    // setsnackBars({ ...snackBars, open: false });
                   }}
-                  severity={snackBars.severity}
                 >
-                  {snackBars.content}
-                </Alert>
-              }
-            </Snackbar>
-          )}
-
+                  {
+                    <Alert
+                      onClose={(e) => {
+                        setSnackBars({ ...snackBars, open: false });
+                      }}
+                      severity={snackbar.severity}
+                    >
+                      {snackbar.content}
+                    </Alert>
+                  }
+                </Snackbar>
+              );
+            })}
+          {/* <Snackbar
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+            open={true}
+            //autoHideDuration={10000}
+            onClose={(e) => {
+              console.log("Hola");
+            }}
+          >
+            {
+              <Alert
+                onClose={(e) => {
+                  console.log("Hola");
+                }}
+                severity={"success"}
+              >
+                {"Solo una alerta de prueba"}
+              </Alert>
+            }
+          </Snackbar> */}
           <Wraper>
             <BrowserRouter>
               {/* <Route exact path="/" render={() => <Identifier />} /> */}
