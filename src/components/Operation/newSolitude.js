@@ -12,6 +12,7 @@ import Container from "@material-ui/core/Container";
 import MyContext from "../../context/mycontext";
 import { Select, FormControl, InputLabel, MenuItem } from "@material-ui/core";
 import moment from "moment";
+import socket from "../../socket";
 
 //Import methods and internal project functions
 //For validating the NM
@@ -172,6 +173,8 @@ export default function SignUp() {
     };
 
     functionAsync();
+    console.log("In new solitude this is the obtained socket!!!");
+    console.log(socket.emit("newRootEnvelope"), { nm: ctx.nmActual });
     return () => {};
   }, []);
 

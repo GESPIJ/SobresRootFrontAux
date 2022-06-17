@@ -83,6 +83,9 @@ export default withRouter(function SignIn({ usuarioActual }) {
         //Server Response
         const response = await axios.post("/admin/signIn", payload);
 
+        console.log("This is the ctx!!!!");
+        console.log(ctx);
+
         const result = await axios.post("/admin/updateUserFailedAttemps", {
           nm: ctx.nmActual,
           failedAttemps: 0,
@@ -248,20 +251,23 @@ export default withRouter(function SignIn({ usuarioActual }) {
 
   //We reditect to the next authentication phase
   const redirectToHomePage = (response = null) => {
-    debugger;
+    // debugger;
     //history.replace("/doubleAuth");
-    history.replace("/signInLDAP");
-    // let department;
-    // if (response !== null) {
-    //   department = response.data.department;
-    // } else {
-    //   department = user.department;
-    // }
-    // if (department === "Administración") {
-    //   history.replace("/HomeOperations");
-    // } else if (department === "Operaciones") {
-    //   history.replace("/HomeAdmin");
-    // }
+    // history.replace("/signInLDAP");
+    let department;
+    if (response !== null) {
+      department = response.data.department;
+    } else {
+      department = user.department;
+    }
+
+    console.log("This is the department obtained!!!!");
+    console.log(department);
+    if (department === "Administración") {
+      history.replace("/HomeOperations");
+    } else if (department === "Operaciones") {
+      history.replace("/HomeAdmin");
+    }
   };
   const cancelFormFunction = (e) => {
     setchangeOldPassword(false);

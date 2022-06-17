@@ -39,9 +39,16 @@ import axios from "axios";
 import ConfirmDialog from "./components/Dialogs/ConfirmDialog";
 import Wraper from "./wraper";
 
+//Here we are importing the snackbar
+import { Snackbar } from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
+import getSocket from "./socket";
+import { io } from "socket.io-client";
+
 function App() {
   const ctx = useContext(MyContext);
 
+  //He are the ref placed!!!
   const windowAboutToClose = useRef(false);
   const windowAboutToStay = useRef(false);
   const firstTimeTimerToken = useRef(false);
@@ -53,6 +60,14 @@ function App() {
   const [counter, setcounter] = useState(0);
   const [clickOnStay, setclickOnStay] = useState(false);
   const [showConfirmDialog, setshowConfirmDialog] = useState(false);
+  const [newEnvelopeRequest, setnewEnvelopeRequest] = useState(false);
+  // const [snackBars, setSnackBars] = useState({
+  //   open: false,
+  //   content: "",
+  //   severity: "success",
+  // });
+
+  const [snackBars, setSnackBars] = useState([]);
 
   const cerrandoTab = async () => {
     if (!windowAboutToClose.current) {
@@ -102,6 +117,15 @@ function App() {
     });
 
     ctx.settimerForJwt((prev) => !prev);
+  };
+
+  const displaySnackbar = (severity, content) => {
+    setSnackBars({
+      ...snackBars,
+      open: true,
+      content: content,
+      severity: severity,
+    });
   };
 
   useEffect(() => {
@@ -163,6 +187,41 @@ function App() {
       registerNewToken();
     }
   }, [ctx.timerForJwt]);
+
+  useEffect(() => {
+    if (newEnvelopeRequest) {
+      setnewEnvelopeRequest(false);
+      displaySnackbar(
+        "success",
+        "Nueva solicitud de sobre root registrada desde el usuario!!!"
+      );
+    }
+  }, [newEnvelopeRequest]);
+
+  //This is executed only the first time the component is mounted
+  useEffect(() => {
+    // const socket = io("http://localhost:3000");
+
+    // socket.on("connect", () => {
+    //   console.log("El cliente se conecto bien al servidor");
+    //   console.log(socket);
+    // });
+    // const receivedSocket = getSocket();
+    console.log("The socket was obtained and is this");
+    console.log(getSocket);
+
+    getSocket.on("newRootEnvelope", (parameter) => {
+      console.log(
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      );
+      console.log(parameter);
+      debugger;
+      console.log("There was received a new root envelope from another user!!");
+      setnewEnvelopeRequest(true);
+    });
+
+    console.log("Hello");
+  }, []);
 
   return (
     <>
@@ -257,6 +316,34 @@ function App() {
               }}
             />
           )}
+
+          {/* {ctx && ctx.department === "Administración" && newEnvelopeRequest && <Snackbar>>} */}
+          {ctx && (
+            <Snackbar
+              anchorOrigin={{ vertical: "top", horizontal: "center" }}
+              open={snackBars.open}
+              autoHideDuration={10000}
+              onClose={(e) => {
+                setSnackBars({ open: false, content: "", severity: "success" });
+                // if (snackBars.severity === "success") {
+                //   history.replace("/HomeOperations");
+                // }
+                // setsnackBars({ ...snackBars, open: false });
+              }}
+            >
+              {
+                <Alert
+                  onClose={(e) => {
+                    setSnackBars({ ...snackBars, open: false });
+                  }}
+                  severity={snackBars.severity}
+                >
+                  {snackBars.content}
+                </Alert>
+              }
+            </Snackbar>
+          )}
+
           <Wraper>
             <BrowserRouter>
               {/* <Route exact path="/" render={() => <Identifier />} /> */}

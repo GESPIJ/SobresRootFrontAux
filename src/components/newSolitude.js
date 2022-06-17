@@ -28,6 +28,8 @@ import Boton from "../boton";
 import MenuIcon from "@material-ui/icons/Menu";
 import moment from "moment";
 
+import socket from "../socket"
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -156,6 +158,8 @@ export default function SignUp() {
   useEffect(async () => {
     let currentSolitudes = await fetchSolitudes();
     fetchSystems(currentSolitudes);
+    console.log("In new solitude this is the obtained socket!!!");
+    console.log(socket)
     return () => {};
   }, []);
 
