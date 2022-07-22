@@ -9,10 +9,6 @@ import ReactPDF, {
   Text,
   Image,
   StyleSheet,
-  PDFViewer,
-  PDFDownloadLink,
-  View,
-  Link,
 } from "@react-pdf/renderer";
 import BarraNavegacion from "./BarraNavegacion";
 import { makeStyles } from "@material-ui/core/styles";
@@ -75,9 +71,10 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 24,
+    fontSize: 20,
     textAlign: "center",
     fontFamily: "Oswald",
+    fontWeight: "bold",
     //fontWeight: "bold",
   },
   author: {
@@ -136,12 +133,6 @@ Font.register({
   src: "https://fonts.gstatic.com/s/oswald/v13/Y_TKV6o8WovbUd3m_X9aAA.ttf",
 });
 
-const Subtitle = ({ children, ...props }) => (
-  <Text style={styles.subtitle} {...props}>
-    {children}
-  </Text>
-);
-
 const MyDocument = (props) => {
   const history = useHistory();
   const ctx = useContext(MyContext);
@@ -179,7 +170,12 @@ const MyDocument = (props) => {
     };
 
     const afterPrintHandler = (e) => {
-      history.replace("/waitingForPrint");
+      history.push({
+        replace: "/waitingForPrint",
+        state: props.location.state,
+      });
+
+      // {pathname:"/pageToPDF", state:propObjects,}
       console.log("La impresión termino");
       console.log(e);
       setEnableView(false);
@@ -224,6 +220,17 @@ const MyDocument = (props) => {
               >
                 Lorem Ipsum
               </Link> */}
+
+              <img
+                src={"/bdv_logo_large_rif.png"}
+                alt="Banco de Venezuela"
+                style={{
+                  maxWidth: "200px",
+                  display: "block",
+                  marginBottom: "20px",
+                }}
+                //onLoad={() => window.print()}
+              />
               <Text style={styles.title}>
                 Solicitud sobre root para el {datosSistemaRoot.name} en fecha{" "}
                 {convertDateToHumanReadable(datosSistemaRoot.date)}
@@ -231,13 +238,85 @@ const MyDocument = (props) => {
               <br />
               <br />
 
-              <View style={styles.parentView}>
+              <table
+                style={{
+                  width: "75%",
+                  borderSpacing: "20px",
+                  border: "1px solid",
+                }}
+              >
+                {/* <tr>
+                  <th></th>
+                  <th>Contact</th>
+                  <th>Country</th>
+                </tr> */}
+                <tr>
+                  <td>
+                    <div
+                      style={{
+                        fontWeight: "bold",
+                        width: "40%",
+                      }}
+                    >
+                      Nombre
+                    </div>
+                  </td>
+                  <td> {datosSistemaRoot.name}</td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <div style={{ fontWeight: "bold" }}> Operador</div>
+                  </td>
+                  <td>{datosSistemaRoot.operator}</td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <div style={{ fontWeight: "bold" }}> Administrador</div>
+                  </td>
+                  <td> {datosSistemaRoot.admin}</td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <div style={{ fontWeight: "bold" }}>Ip y puerto</div>
+                  </td>
+                  <td>{datosSistemaRoot.ip + ":" + datosSistemaRoot.port}</td>
+                </tr>
+                <tr>
+                  <td>
+                    <div style={{ fontWeight: "bold" }}>Clave</div>
+                  </td>
+                  <td>{datosSistemaRoot.password}</td>
+                </tr>
+              </table>
+
+              <div style={{ marginTop: "20px" }}>
+                Ten en cuenta que la información presentada a conitnuación es
+                confidencial y su uso indebido puede traer consecuencias legales
+              </div>
+
+              <div
+                style={{
+                  position: "absolute",
+                  right: "25%",
+                  marginTop: "20px",
+                }}
+              >
+                <img
+                  src={"/footer_img.png"}
+                  alt="Banco de Venezuela"
+                  style={{ width: "100px" }}
+                />
+              </div>
+
+              {/* <View style={styles.parentView}>
                 <View style={styles.view}>
                   <Text style={styles.leftColumnText}>{"Nombre "}</Text>
                   <Text style={styles.rightColumnText}>
                     {datosSistemaRoot.name}
                   </Text>
-                  {/* <View style={styles.fill1} /> */}
                 </View>
                 <br />
 
@@ -248,7 +327,6 @@ const MyDocument = (props) => {
                   <Text style={styles.rightColumnText}>
                     {datosSistemaRoot.operator}
                   </Text>
-                  {/* <View style={styles.fill1} /> */}
                 </View>
                 <br />
 
@@ -257,7 +335,6 @@ const MyDocument = (props) => {
                   <Text style={styles.rightColumnText}>
                     {datosSistemaRoot.admin}
                   </Text>
-                  {/* <View style={styles.fill1} /> */}
                 </View>
                 <br />
 
@@ -266,7 +343,6 @@ const MyDocument = (props) => {
                   <Text style={styles.rightColumnText}>
                     {datosSistemaRoot.ip + ":" + datosSistemaRoot.port}
                   </Text>
-                  {/* <View style={styles.fill1} /> */}
                 </View>
                 <br />
 
@@ -275,10 +351,9 @@ const MyDocument = (props) => {
                   <Text style={styles.rightColumnText}>
                     {datosSistemaRoot.password}
                   </Text>
-                  {/* <View style={styles.fill1} /> */}
                 </View>
                 <br />
-              </View>
+              </View> */}
             </Page>
           </Document>
         </div>
