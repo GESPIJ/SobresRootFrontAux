@@ -171,7 +171,7 @@ const MyDocument = (props) => {
 
     const afterPrintHandler = (e) => {
       history.push({
-        replace: "/waitingForPrint",
+        pathname: "/waitingForPrint",
         state: props.location.state,
       });
 
