@@ -69,22 +69,18 @@ export default withRouter(function SignIn({ usuarioActual }) {
     confirmFunction: null,
     cancelFunction: null,
   });
-  const [invalidEmail, setinvalidEmail] = useState(false);
   const [changeOldPassword, setchangeOldPassword] = useState(false);
 
   //Component Functions
   const fetchLocal = async ({ name, password, nm }) => {
     try {
       //We check if user is currently not blocked to make the request
-      if (ctx.userStatus === "active") {
+      if (ctx.userStatus === "active" && password !== "") {
         //let parsedNm = nm.substring(2);
 
         const payload = { name, password, nm };
         //Server Response
         const response = await axios.post("/admin/signIn", payload);
-
-        console.log("This is the ctx!!!!");
-        console.log(ctx);
 
         const result = await axios.post("/admin/updateUserFailedAttemps", {
           nm: ctx.nmActual,
@@ -93,6 +89,8 @@ export default withRouter(function SignIn({ usuarioActual }) {
         });
 
         let message = response.data.message;
+
+        debugger;
 
         //If the user is connected from a wrong ip that the previous assigned we display a message
         if (message === "WrongIp") {
@@ -111,12 +109,8 @@ export default withRouter(function SignIn({ usuarioActual }) {
           setinvalidCredentials(false);
           setuser({ ...user, department: response.data.department });
           ctx.setuserAditionalInfo({ ...response.data });
-          console.log(
-            "This is the response data----------------------------------------------------"
-          );
-          console.log({ ...response.data });
 
-          //console.log("This is the whole response that I'm getting", response);
+          //
           ctx.settimerForJwt(!ctx.timerForJwt);
           const messageText =
             "Usuario logeado " + ctx.usuarioActual + " con exito en local";
@@ -152,7 +146,6 @@ export default withRouter(function SignIn({ usuarioActual }) {
 
             //If password is older than 30 days we request the user for changing it
           } else {
-            console.log(ctx.usuarioActual);
             setchangeOldPassword(passwordTooOld);
           }
         }
@@ -235,11 +228,9 @@ export default withRouter(function SignIn({ usuarioActual }) {
 
         //Blocked user
       } else {
-        //console.log("BLOCKEEEEEEEEEEEEEEEEEEEED USER");
+        //
       }
-    } catch (e) {
-      console.log(e);
-    }
+    } catch (e) {}
   };
 
   //We validate the user email
@@ -252,8 +243,8 @@ export default withRouter(function SignIn({ usuarioActual }) {
   //We reditect to the next authentication phase
   const redirectToHomePage = (response = null) => {
     // debugger;
-    //history.replace("/doubleAuth");
-    // history.replace("/signInLDAP");
+    // history.replace("/doubleAuth");
+    //history.replace("/signInLDAP");
     let department;
     if (response !== null) {
       department = response.data.department;
@@ -261,12 +252,10 @@ export default withRouter(function SignIn({ usuarioActual }) {
       department = user.department;
     }
 
-    console.log("This is the department obtained!!!!");
-    console.log(department);
-    if (department === "Administración") {
-      history.replace("/HomeOperations");
-    } else if (department === "Operaciones") {
+    if (department === "Operaciones") {
       history.replace("/HomeAdmin");
+    } else {
+      history.replace("/HomeOperations");
     }
   };
   const cancelFormFunction = (e) => {
@@ -277,32 +266,40 @@ export default withRouter(function SignIn({ usuarioActual }) {
     let newPassword = newPasswordField.newPassword;
     let payload = {
       newPassword: newPasswordField.newPassword,
-      name: user.name,
-      //nm: "123456",
+      nm: user.nm,
     };
 
     let validatedPassword = validatePassword(newPassword);
-    if (validatedPassword) {
-      const response = await axios.post("/admin/updateUserPassword", payload);
-      debugger;
-      if (response.data.message === "succesfully") {
-        setchangeOldPassword(false);
-        setAlertMessage({
-          ...AlertMessage,
-          state: true,
-          title: "Clave cambiada correctamente",
-          //description: "Change_Old_Password",
-        });
-      } else {
-      }
-    } else {
+    if (user.password === newPassword) {
       setAlertMessage({
         ...AlertMessage,
         state: true,
-        title: "Por favor seleccione una clave mejor",
+        title: "Por favor cambie su clave",
         description:
-          "La clave no cumple con los estandares de seguridad requeridos. Recuerde que debe ser de minimo 8 caracteres y contar con una mayuscula, minuscula, numero y caracter especial",
+          "Por motivos de seguridad su nueva clave no puede ser igual a la clave usada anteriormente",
       });
+    } else {
+      if (validatedPassword) {
+        const response = await axios.post("/admin/updateUserPassword", payload);
+        if (response.data.message === "succesfully") {
+          setchangeOldPassword(false);
+          setAlertMessage({
+            ...AlertMessage,
+            state: true,
+            title: "Clave cambiada correctamente",
+            description: "",
+          });
+        } else {
+        }
+      } else {
+        setAlertMessage({
+          ...AlertMessage,
+          state: true,
+          title: "Por favor seleccione una clave mejor",
+          description:
+            "La clave no cumple con los estandares de seguridad requeridos. Recuerde que debe ser de minimo 8 caracteres y contar con una mayuscula, minuscula, numero y caracter especial",
+        });
+      }
     }
 
     //setchangeOldPassword(false);
@@ -327,20 +324,14 @@ export default withRouter(function SignIn({ usuarioActual }) {
   const onBlurHandler = (e) => {
     let name = e.target.value;
     let validationResult = validateEmail(name);
-    console.log(validationResult);
-    setinvalidEmail(!validationResult);
-    //let re = /nm[0-9]{6}/;
-    //let re = /nm[0-9]{6}/;
-    //console.log(e.target.value);
   };
   const classes = useStyles();
 
   useEffect(() => {
-    //console.log(history);
-    //console.log(contextType);
-    //console.log(props);
+    //
+    //
+    //
     //debugger;
-    console.log(ctx);
   }, []);
   return (
     <div className="signIn">
@@ -396,7 +387,7 @@ export default withRouter(function SignIn({ usuarioActual }) {
             <TextField
               onChange={(e) => {
                 //setusuario(e.target.value);
-                setuser({ ...user, nm: e.target.value });
+                // setuser({ ...user, nm: e.target.value });
               }}
               onBlur={onBlurHandler}
               variant="outlined"
@@ -407,6 +398,7 @@ export default withRouter(function SignIn({ usuarioActual }) {
               label="NM"
               name="nm"
               autoComplete="email"
+              inputProps={{ readOnly: true }}
               //autoFocus
               value={user.nm}
             />

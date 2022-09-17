@@ -23,7 +23,7 @@ import moment from "moment";
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
+      {"Copyright Â© "}
       <Link color="inherit" href="https://material-ui.com/">
         Your Website
       </Link>{" "}
@@ -99,22 +99,104 @@ export default function SignUp() {
     let currentDate = new Date();
     currentDate = moment(currentDate);
 
-    let isOlder = currentDate.isAfter(response.data.tiempoCaducacion);
     if (response.data.message == "succesfully") {
-      console.log(response.data.department);
+      const result = await axios.post("/admin/updateUserFailedAttemps", {
+        nm: ctx.nmActual,
+        failedAttemps: 0,
+        reset: true,
+      });
       let redirectPath =
-        response.data.department == "Administración"
+        ctx.userAditionalInfo.department == "Administración"
           ? "HomeOperations"
           : "HomeAdmin";
       history.replace(redirectPath);
-      //   ctx.setusuarioActual(response.data.name);
-      //   history.push("/signIn");
     } else {
       setvalidCode({
         ...validCode,
         state: true,
         message: response.data.message,
       });
+
+
+      if (ctx.failedAttemps < 2) {
+        const intentosQueQuedan = 2 - ctx.failedAttemps;
+        const texto =
+          ctx.failedAttemps === 1
+            ? "Clave incorrecta, usted tiene solo un intento más antes de bloquear su usuario"
+            : "Clave incorrecta, usted tiene " +
+              intentosQueQuedan +
+              " intentos mas antes de bloquear su usuario";
+        //If the user has less than 3 failed attemps
+
+        setvalidCode({
+          ...validCode,
+          state: true,
+          message: texto,
+        });
+  
+        const tryText =
+          ctx.failedAttemps === 0
+            ? " primer intento"
+            : ctx.failedAttemps === 1
+            ? " segundo intento"
+            : " tercer intento";
+        const logMessage =
+          "Inicio de sesión fallido en autenticación local para " +
+          ctx.usuarioActual +
+          " con nm " +
+          ctx.nmActual +
+          tryText;
+
+        const responseFailedAttemps = await axios.post(
+          "/admin/updateUserFailedAttemps",
+          {
+            nm: ctx.nmActual,
+            name: ctx.usuarioActual,
+            failedAttemps: ctx.failedAttemps,
+            reset: false,
+          }
+        );
+
+        //We register the corresponding Log
+        const response = axios.post("/admin/registerLog", {
+          solitude: null,
+          message: logMessage,
+        });
+        ctx.setFailedAttemps(ctx.failedAttemps + 1);
+
+        //If the user failed to login in the system 3 times his user is currently blocked
+      } else {
+        const response = axios.post("/admin/registerLog", {
+          solitude: null,
+          message: "Usuario bloqueado tras tres intentos fallidos en local",
+        });
+        const responseFailedAttemps = await axios.post(
+          "/admin/updateUserFailedAttemps",
+          {
+            nm: ctx.nmActual,
+            name: ctx.usuarioActual,
+            failedAttemps: ctx.failedAttemps,
+            reset: false,
+          }
+        );
+
+        ctx.setUserStatus("blocked");
+        setvalidCode({
+          ...validCode,
+          state: true,
+          message: "Su usuario se encuentra bloqueado debido a más de 3 intentos fallidos",
+        });
+  
+        ctx.setFailedAttemps(ctx.failedAttemps + 1);
+        history.replace({
+          pathname: "/",
+          state: {
+            helperTextBlockedUser:
+              "Su usuario se encuentra bloqueado debido a más de 3 intentos fallidos",
+            validateInfo: { password: true },
+          },
+        });
+      }
     }
   };
   const validateNm = (nm) => {

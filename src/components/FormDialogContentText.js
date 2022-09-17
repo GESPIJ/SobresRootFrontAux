@@ -51,6 +51,7 @@ const useStylesForm = makeStyles((theme) => ({
 
   textJustified: {
     textAlign: "justify",
+    color: "rgb(0,0,0,0.87)",
   },
 
   cancelButton: {
@@ -81,6 +82,7 @@ const useStylesForm = makeStyles((theme) => ({
     //backgroundColor: "rgb(49, 61, 70)",
     // backgroundColor: "rgb(30,33,35)",
     color: "black",
+    fontWeight: "bold",
   },
 
   textFieldForm: {
@@ -143,16 +145,15 @@ function FormDialogAuth({
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle
-          //className={classesFormDialog.dialogTitle}
+          className={classesFormDialog.dialogTitle}
           id="form-dialog-title"
         >
           {title}
         </DialogTitle>
-        <DialogContent
-        //className={classesFormDialog.root}
-        >
+        <DialogContent color="primary">
           <DialogContentText
             id="alert-dialog-description"
+            color="primary"
             className={classesFormDialog.textJustified}
           >
             {contentText}

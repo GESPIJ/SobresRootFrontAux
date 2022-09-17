@@ -24,6 +24,8 @@ import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import InputDialog from "./../FormDialogContentText";
 import { convertDateToHumanReadable } from "../../utils/helper";
 import MyContext from "../../context/mycontext";
+import socket from "../../socket";
+import axios from "axios";
 
 //Component Styles
 const useStyles = makeStyles((theme) => ({
@@ -47,6 +49,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Orders({ solitudes }) {
   //Component context state
+  //debugger;
   const ctx = useContext(MyContext);
   const refUpdateTable = useRef(true);
   const refTimer = useRef("");
@@ -100,7 +103,6 @@ export default function Orders({ solitudes }) {
     );
 
     setlistOfSolitudes(newPaginatedSolitudes);
-    console.log("Hubo un cambio aca");
   };
 
   //Function for changing the number of inputs per page actually being shown on the table
@@ -138,39 +140,110 @@ export default function Orders({ solitudes }) {
       acknowledgeSolitudes: alertData.acknowledgeSolitudes,
     });
   };
+
+  let setSolitudeNotificationAsSent = async (solitude) => {
+    let response = await axios.post(
+      "/admin/updateSentNotificationForSolitude",
+      solitude
+    );
+    console.log("This is the response");
+    console.log(response);
+  };
+
+  let setSolitudeFinishedNotificationAsSent = async (solitude) => {
+    await axios.post(
+      "/admin/updateSentNotificationForFinishedSolitude",
+      solitude
+    );
+  };
+
+  let finishSolitude = async (solitude) => {
+    let response = await axios.post("/admin/finishSolitude", solitude);
+    await axios.post("/admin/requireSystemNewPassword", {id: solitude.SistemaId});
+    //await axios.post("/admin/generateNewComponent", {id: solitude.SistemaId});
+  };
+
   useEffect(() => {
     if (solitudes.length > 0) {
       refTimer.current = setTimeout(() => {
         if (true) {
           let actualTime = moment();
-          console.log("Paso un timer");
           if (solitudes.length > 0) {
             solitudes.forEach((solitude) => {
               let solitudeTime = moment(solitude.createdAt);
-              //let actualTime = moment().subtract(8, "hours");
               let actualDate = new Date();
               let actualTime = moment(actualDate);
               let transcurredTime = actualTime.diff(solitudeTime, "seconds");
 
-              if (transcurredTime > 28800) {
-                solitude.state = "finished";
+              let finishTime = 28800;
+              let extensionValue = solitude.extension ? 14400 : 0;
+              finishTime = finishTime + extensionValue;
+              let timeBeforeAlert = 25200;
+              timeBeforeAlert = timeBeforeAlert + extensionValue;
+
+              if (transcurredTime > finishTime || solitude.finished) {
+                //Si la solicitud finaliza por el tiempo transcurriendo normalmente.
+                if (!solitude.finished) {
+                  solitude.finished = true;
+                  solitude.state = "finished";
+                  //Enviamos la petición al servidor para finalizar la solicitud
+                  finishSolitude(solitude);
+                  //Enviamos la correspondiente alerta por socket
+                  socket.emit("rootEnvelopeEnded", {
+                    nm: ctx.nmActual,
+                    system: solitude.systemName,
+                    systemId: solitude.SistemaId,
+                    expirationTime: moment()
+                      .add(finishTime - transcurredTime, "seconds")
+                      .format("HH:mm"),
+                  });
+                } else {
+                  solitude.state = "finished";
+
+                  if (!solitude.finishedNotificationSent) {
+                    //Se envía una petición al servidor para marcar la alarma de alerta finalizada como true
+                    setSolitudeFinishedNotificationAsSent(solitude);
+                    solitude.finishedNotificationSent = true;
+                    //Enviamos la correspondiente alerta por sockets
+                    socket.emit("rootEnvelopeEnded", {
+                      nm: ctx.nmActual,
+                      system: solitude.systemName,
+                      systemId: solitude.SistemaId,
+                      expirationTime: moment()
+                        .add(finishTime - transcurredTime, "seconds")
+                        .format("HH:mm"),
+                    });
+                  }
+                }
               } else {
                 let idAcknowledged = false;
                 idAcknowledged = alertData.acknowledgeSolitudes.some(
                   (id) => id === solitude.id
                 );
                 if (
-                  transcurredTime > 25200 &&
+                  transcurredTime > timeBeforeAlert &&
                   !idAcknowledged &&
                   !alertData.active
                 ) {
+                  if (!solitude.notificationSent) {
+                    setSolitudeNotificationAsSent(solitude);
+                    solitude.notificationSent = true;
+                    socket.emit("rootEnvelopeAboutToEnd", {
+                      nm: ctx.nmActual,
+                      system: solitude.systemName,
+                      expirationTime: moment()
+                        .add(finishTime - transcurredTime, "seconds")
+                        .format("HH:mm"),
+                    });
+                  }
+
                   setalertData({
                     ...solitude,
                     active: true,
                     acknowledgeSolitudes: alertData.acknowledgeSolitudes,
                   });
                 }
-                let remainingTime = 28800 - transcurredTime;
+                let remainingTime = finishTime - transcurredTime;
                 let hours = Math.floor(remainingTime / 3600).toString();
                 hours = hours.length === 1 ? "0" + hours : hours;
                 let minutes = Math.floor(
@@ -217,10 +290,6 @@ export default function Orders({ solitudes }) {
         settimer((prev) => !prev);
       }, 200);
     }
-
-    //debugger;
-    console.log(solitudes.length);
-    //console.log(solitudes);
   }, [timer]);
 
   useEffect(() => {
@@ -308,13 +377,14 @@ export default function Orders({ solitudes }) {
                               //debugger;
 
                               if (solitude.state) {
-                                ctx.setcurrentSolitude({ id: solitude.id });
+                                ctx.setcurrentSolitude({ id: solitude.id, systemName: solitude.systemName, nmSolicitante: solitude.nmSolicitante, SistemaId: solitude.SistemaId });
                                 history.replace({
                                   pathname: "/timeoutcounter",
 
                                   state: {
                                     id: solitude.id,
                                     timeLeft: solitude.timeLeft,
+                                    solitude: solitude,
                                   },
                                 });
                               }

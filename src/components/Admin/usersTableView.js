@@ -15,8 +15,13 @@ export default function SignUp() {
   const fetchSystems = async () => {
     //Server Response
     const response = await axios.get("/admin/usersAll");
+
+    const usersWithoutAdmin = response.data.systems.filter(
+      (user) => user.nm !== "NM0"
+    );
+
     //We update the data
-    setSystems({ ...systems, systems: response.data.systems.reverse() });
+    setSystems({ ...systems, systems: usersWithoutAdmin.reverse() });
     //We cancel the spinner
     setloading(false);
   };

@@ -5,10 +5,9 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
 import MyContext from "../context/mycontext";
 import axios from "axios";
+import socket from "../socket";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,6 +33,7 @@ const BarraNavegacion = () => {
   const cerrandoTab = async () => {
     const response = await axios.post("/admin/closingTab", {
       name: ctx.usuarioActual,
+      nm: ctx.nmActual,
     });
     console.log(response.data.message);
   };
@@ -42,27 +42,11 @@ const BarraNavegacion = () => {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar className={classes.AppBarra}>
-          {/* <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="menu"
-          >
-            <MenuIcon />
-          </IconButton> */}
           <Typography variant="h6" className={classes.title}></Typography>
 
           {ctx.usuarioActual !== "" && (
             <Button
               onClick={async () => {
-                const longitud = history.length;
-                //   debugger;
-                //   let actualDirection;
-                //   for (let i = 0; i < longitud; i++) {
-                //     actualDirection = history.pop();
-                //   }
-
-                //   debugger;
                 if (ctx.isSuccesfullyLogged) {
                   await axios.post("/admin/updateJWToken", {
                     name: ctx.usuarioActual,
@@ -79,9 +63,15 @@ const BarraNavegacion = () => {
                     solitude: null,
                   });
                   await cerrandoTab();
+
+                  console.log("La ventana se esta empezando a cerrar");
+                  try {
+                    socket.disconnect();
+                    history.replace("/");
+                  } catch (err) {}
                 }
 
-                history.replace("/");
+                // history.replace("/");
               }}
               color="inherit"
             >

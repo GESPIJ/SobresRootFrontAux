@@ -48,7 +48,8 @@ const useStyles2 = makeStyles({
 });
 
 //Component
-const Home = () => {
+const Home = (props) => {
+  console.log(props);
   const history = useHistory();
   const classes = useStyles();
   const classes2 = useStyles2();
@@ -98,7 +99,10 @@ const Home = () => {
               <Card
                 className={classes2.card}
                 onClick={() => {
-                  history.replace("/pageToPDF");
+                  history.replace({
+                    pathname: "/pageToPDF",
+                    state: props.location.state,
+                  });
                 }}
               >
                 <CardHeader

@@ -120,7 +120,6 @@ export default function SignUp() {
 
     console.log(availableSystems); //Ordenamos los sistemas, mostrando primero aquellos que estan habilitados para nuevas solicitudes
     availableSystems.sort((a, b) => (a.enabled > b.enabled ? 1 : -1));
-    //setSystems({ ...systems, systems: response.data.systems });
     setSystems({ ...systems, systems: availableSystems });
   };
 
@@ -133,35 +132,74 @@ export default function SignUp() {
     };
 
     //Server Response
-    const response = await axios.post("/admin/registerSolitude", payload);
+    // socket.emit("newRootEnvelope", {
+    //   nm: ctx.nmActual,
+    //   system: systems.selectedSystem,
+    //   expirationTime: moment().add(8, "hours").format("HH:mm"),
+    // });
 
-    //If the creation of the new solitude was succesfull
-    if (response.data.mensaje === "Valido") {
-      ctx.setcurrentSolitude({ ...ctx.currentSolitude, id: response.data.id });
-      const messageText =
-        "Nueva solicitud creada con exito para el " +
-        systems.selectedSystem +
-        " con id " +
-        response.data.sistema +
-        " por parte del usuario de operaciones " +
-        ctx.usuarioActual +
-        " con nm " +
-        ctx.nmActual;
-      //If succesfull we create the corresponding Log
-      await axios.post("/admin/registerLog", {
-        message: messageText,
-        solitude: response.data.id,
+    console.log(validData);
+
+    if (validData.nm) {
+      const response = await axios.post("/admin/registerSolitude", payload);
+
+      const notificationResponse = await axios.post("/admin/notifySolitudeByEmail", {
+        nm: ctx.nmActual,
+        textContent: `Se ha procesado una nueva solicitud de sobre root por parte del operador con NM ${ctx.nmActual} sobre el sistema de nombre ${systems.selectedSystem}`,
+        textTitle: `Nueva solicitud de sobre root procesada sobre el sistema de nombre ${systems.selectedSystem}  `
       });
-      const propObjects = {
-        date: new Date().toDateString(),
-        name: response.data.systemName,
-        admin: "Oswaldo",
-        ip: "180.183.98.17",
-        port: "80",
-        password: "123456",
-        operator: ctx.usuarioActual,
-      };
-      history.replace({ pathname: "/pageToPDF", state: propObjects });
+
+      // // If the creation of the new solitude was succesfull
+      if (response.data.mensaje === "Valido") {
+        // const response = await axios.post("/admin/notifySolitudeByEmail", {
+        //   nm: ctx.nmActual,
+        //   system: systems.selectedSystem,
+        //   expirationTime: moment().add(8, "hours").format("HH:mm"),
+        // });
+
+        //socket.emit("newRootEnvelope", { nm: ctx.nmActual });
+
+        socket.emit("newRootEnvelope", {
+          nm: ctx.nmActual,
+          system: systems.selectedSystem,
+          expirationTime: moment().add(8, "hours").format("HH:mm"),
+        });
+
+        ctx.setcurrentSolitude({
+          ...ctx.currentSolitude,
+          id: response.data.id,
+        });
+        const messageText =
+          "Nueva solicitud creada con exito para el " +
+          systems.selectedSystem +
+          " con id " +
+          response.data.sistema +
+          " por parte del usuario de operaciones " +
+          ctx.usuarioActual +
+          " con nm " +
+          ctx.nmActual;
+        //If succesfull we create the corresponding Log
+        await axios.post("/admin/registerLog", {
+          message: messageText,
+          solitude: response.data.id,
+        });
+
+        let systemInfo = systems.systems.find(
+          (sys) => sys.name === systems.selectedSystem
+        );
+
+        const propObjects = {
+          date: new Date().toDateString(),
+          //name: response.data.systemName,
+          name: systems.selectedSystem,
+          admin: systemInfo.admin,
+          ip: systemInfo.ip,
+          port: systemInfo.port,
+          password: systemInfo.password,
+          operator: ctx.usuarioActual,
+        };
+        history.replace({ pathname: "/pageToPDF", state: propObjects });
+      }
     }
   };
 
@@ -173,8 +211,7 @@ export default function SignUp() {
     };
 
     functionAsync();
-    console.log("In new solitude this is the obtained socket!!!");
-    console.log(socket.emit("newRootEnvelope"), { nm: ctx.nmActual });
+
     return () => {};
   }, []);
 

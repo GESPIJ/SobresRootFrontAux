@@ -110,7 +110,7 @@ export default function SignUp(props) {
     const response = await axios.post("/admin/updateUserInfo", payload);
 
     if (response.data.message === SUCCESFULLY) {
-      displaySnackbar(Severity_Success, "Usuario modificado con éxito");
+      displaySnackbar(Severity_Success, "Usuario modificado con Ã©xito");
     } else {
       displaySnackbar(Severity_Error, "Error modificando el usuario");
     }
@@ -275,7 +275,9 @@ export default function SignUp(props) {
                     label="Departamento"
                   >
                     <MenuItem value={"Operaciones"}>Operaciones</MenuItem>
-                    <MenuItem value={"Administración"}>Administración</MenuItem>
+                    <MenuItem value={"AdministraciÃ³n"}>
+                      AdministraciÃ³n
+                    </MenuItem>
                   </Select>
                 </FormControl>
               </Grid>

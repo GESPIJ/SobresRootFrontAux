@@ -10,7 +10,9 @@ import { IconButton, Card, CardHeader } from "@material-ui/core";
 import BarraNavegacion from "../BarraNavegacion";
 import MyContext from "../../context/mycontext";
 import CssBaseline from "@material-ui/core/CssBaseline";
-
+import InputDialog from "./../FormDialogContentText";
+import socket from "../../socket";
+import moment from "moment";
 //Component Styles
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -57,6 +59,11 @@ const Home = (props) => {
       : 28800
   );
   const [timerToDate, settimerToDate] = useState("");
+
+  const [timerAboutToExpire, settimerAboutToExpire] = useState(false);
+  const [extensionRequested, setextensionRequested] = useState(false);
+  const [showExpiringAlert, setshowExpiringAlert] = useState(false);
+  const [showExtensionButton, setshowExtensionButton] = useState(false);
   const history = useHistory();
   const classes = useStyles();
   const classes2 = useStyles2();
@@ -69,14 +76,54 @@ const Home = (props) => {
 
     //Server Response
     const response = await axios.post("/admin/finishSolitude", payload);
+    //await axios.post("/admin/generateNewComponent", {id: ctx.currentSolitude.SistemaId});
+    await axios.post("/admin/requireSystemNewPassword", {id: ctx.currentSolitude.SistemaId});
+    // const notificationResponse = await axios.post("/admin/notifySolitudeByEmail", {
+    //   nm: ctx.nmActual,
+    //   textContent: `La solicitud de sobre root para el sistema de nombre ${ctx.currentSolitude.systemName} a cargo del operador con ${ctx.nmActual} ha finalizado`,
+    //   textTitle: `Solicitud de sobre root finalizada para el sistema de nombre ${ctx.currentSolitude.systemName} `
+    // });
+
 
     if (response.data.message === "success") {
       history.replace("/solitudesTable");
     }
   };
 
+  const extendSolitude = async (id) => {
+    const payload = { id: id };
+
+    //Server Response
+    const response = await axios.post("/admin/extendSolitude", payload);
+
+    if (response.data.message === "success") {
+      setcounterTimer((prev) => prev + 14400);
+      //Do something
+    }
+  };
+
   //Function for updating the timer every 1 second and reflect it on the screen
   useEffect(() => {
+    if (counterTimer < 3600 && !timerAboutToExpire) {
+      setshowExtensionButton(true);
+      setshowExpiringAlert(true);
+      if (
+        props.location.state &&
+        !props.location.state.solitude.notificationSent
+      ) {
+        socket.emit("rootEnvelopeAboutToEnd", {
+          nm: ctx.nmActual,
+          system: "Sistema A",
+          expirationTime: moment().add(59, "minutes").format("HH:mm"),
+        });
+      }
+
+      if (!timerAboutToExpire) {
+        settimerAboutToExpire(true);
+      }
+      //setextensionRequested(true);
+    }
+
     setTimeout(() => {
       console.log(counterTimer);
       if (counterTimer) {
@@ -85,7 +132,7 @@ const Home = (props) => {
           .substr(11, 8);
 
         settimerToDate(dateVariable);
-        console.log(dateVariable);
+        //console.log(dateVariable);
         setcounterTimer((prev) => prev - 1);
       }
     }, 1000);
@@ -96,6 +143,15 @@ const Home = (props) => {
       <CssBaseline />
       <div className={classes.root}>
         <br />
+        {showExpiringAlert && (
+          <InputDialog
+            title={"Solicitud a punto de expirar"}
+            confirmFunction={() => {
+              setshowExpiringAlert(false);
+            }}
+            contentText="A la solicitud le queda sola una hora antes de expirar. En caso de querer extender presione el boton solicitar extension"
+          />
+        )}
         <Container component="main" maxWidth="lg">
           <Typography classes={classes.card} variant="h4"></Typography>
 
@@ -110,7 +166,7 @@ const Home = (props) => {
               <Card
                 className={classes2.card}
                 onClick={() => {
-                  history.replace("/selectPrinter");
+                  // history.replace("/selectPrinter");
                 }}
               >
                 <CardHeader
@@ -162,12 +218,13 @@ const Home = (props) => {
                 />
               </Card>
             </Grid>
-            {counterTimer < 3600 && (
+            {showExtensionButton && (
               <Grid item xs={12} sm={4} md={4} lg={4}>
                 <Card
                   className={classes2.card}
                   onClick={() => {
-                    history.replace("/newSolitude");
+                    extendSolitude(ctx.currentSolitude.id);
+                    //history.replace("/newSolitude");
                   }}
                 >
                   <CardHeader

@@ -38,16 +38,19 @@ import FormularioMediosNoMagneticos from "./components/FormularioMediosNoMagneti
 import axios from "axios";
 import ConfirmDialog from "./components/Dialogs/ConfirmDialog";
 import Wraper from "./wraper";
+import moment from "moment";
 
 //Here we are importing the snackbar
-import { Snackbar } from "@material-ui/core";
+import { Button, Snackbar } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import getSocket from "./socket";
-import { io } from "socket.io-client";
+//import { io } from "socket.io-client";
+//import socket from "./socket";
 
 function App() {
   const ctx = useContext(MyContext);
 
+  const history = useHistory();
   //He are the ref placed!!!
   const windowAboutToClose = useRef(false);
   const windowAboutToStay = useRef(false);
@@ -56,28 +59,20 @@ function App() {
   const usuarioOriginal = window.localStorage.getItem("usuario")
     ? window.localStorage.getItem("usuario")
     : "";
-  const [usuario, setusuario] = useState(usuarioOriginal);
-  const [counter, setcounter] = useState(0);
+
   const [clickOnStay, setclickOnStay] = useState(false);
   const [showConfirmDialog, setshowConfirmDialog] = useState(false);
-  const [newEnvelopeRequest, setnewEnvelopeRequest] = useState(false);
-  // const [snackBars, setSnackBars] = useState({
-  //   open: false,
-  //   content: "",
-  //   severity: "success",
-  // });
+  const [systemIdToRedirect, setsystemIdToRedirect] = useState(null);
 
   const [snackBars, setSnackBars] = useState([]);
 
   const cerrandoTab = async () => {
     if (!windowAboutToClose.current) {
       windowAboutToClose.current = true;
-      console.log("Este es el usuario que se esta mandando", ctx.usuarioActual);
-      console.log(ctx);
-      const response = await axios.post("/admin/closingTab", {
-        name: ctx.usuarioActual,
+      await axios.post("/admin/closingTab", {
+        // name: ctx.usuarioActual,
+        nm: ctx.nmActual,
       });
-      console.log(response.data.message);
     }
   };
 
@@ -87,7 +82,6 @@ function App() {
       const response = await axios.post("/admin/stayingTab", {
         name: ctx.usuarioActual,
       });
-      console.log(response.data.message);
     }
   };
 
@@ -97,8 +91,6 @@ function App() {
 
   const registerNewToken = async () => {
     const response = await axios.get("/admin/generateNewToken");
-    console.log("The user registered a new token and this is the new data!!!");
-    console.log(response);
 
     ctx.setcurrentJWT(response.data.message);
 
@@ -133,16 +125,11 @@ function App() {
       //cerrandoTab();
       //setclickOnStay(false);
     } else {
-      console.log("El usuario cerro");
     }
     window.onbeforeunload = async () => {
       if (!windowAboutToClose.current) {
         windowAboutToClose.current = true;
-        console.log(
-          "Este es el usuario que se esta mandando",
-          ctx.usuarioActual
-        );
-        console.log(ctx);
+
         const messageText =
           "Intento de deslogeo por parte del usuario " +
           ctx.usuarioActual +
@@ -152,13 +139,14 @@ function App() {
           solitude: null,
         });
         const response = await axios.post("/admin/closingTab", {
-          name: ctx.usuarioActual,
+          //name: ctx.usuarioActual,
+          nm: ctx.nmActual,
         });
-        console.log(response.data.message);
         window.setTimeout(async () => {
           const actualJWT = window.localStorage.getItem("code");
           const response = await axios.post("/admin/stayingTab", {
-            name: ctx.usuarioActual,
+            //name: ctx.usuarioActual,
+            nm: ctx.nmActual,
             lastJWT: actualJWT,
           });
           const messageText =
@@ -167,20 +155,15 @@ function App() {
             message: messageText,
             solitude: null,
           });
-          console.log("El timer se acabo", response);
         }, 4000);
       }
     };
-    console.log("Se esta volviendo a renderizar la aplicacion");
-    console.log(ctx.usuarioActual);
   }, [ctx.usuarioActual]);
 
   useEffect(() => {
     if (firstTimeTimerToken.current) {
-      //console.log("BOOOM se disparo el timer que espera a cambiar el codigo");
       setTimeout(async () => {
         await registerNewToken();
-        ctx.settimerForJwt((prev) => !prev);
       }, 120000);
     } else {
       firstTimeTimerToken.current = true;
@@ -188,53 +171,57 @@ function App() {
     }
   }, [ctx.timerForJwt]);
 
-  useEffect(() => {
-    if (newEnvelopeRequest) {
-      console.log("This is the ctx!!!");
-      console.log(ctx);
-
-      //debugger;
-      let newSnackBarsArray = [
-        ...snackBars,
-        {
-          open: true,
-          content: "A new root envelope solitude has been processed",
-          severity: "success",
-        },
-      ];
-
-      setSnackBars(newSnackBarsArray);
-      setnewEnvelopeRequest(false);
-      // displaySnackbar(
-      //   "success",
-      //   "Nueva solicitud de sobre root registrada desde el usuario!!!"
-      // );
-    }
-  }, [newEnvelopeRequest]);
+  let addNewSnackbar = (content, severity) => {
+    setSnackBars((prev) => {
+      return [...prev, { open: true, content: content, severity: severity }];
+    });
+  };
 
   //This is executed only the first time the component is mounted
   useEffect(() => {
-    // const socket = io("http://localhost:3000");
-
-    // socket.on("connect", () => {
-    //   console.log("El cliente se conecto bien al servidor");
-    //   console.log(socket);
-    // });
-    // const receivedSocket = getSocket();
-    console.log("The socket was obtained and is this");
-    console.log(getSocket);
+    getSocket.on("close", () => {});
 
     getSocket.on("newRootEnvelope", (parameter) => {
-      console.log(
-        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-      );
-      console.log(parameter);
-      //debugger;
-      console.log("There was received a new root envelope from another user!!");
-      setnewEnvelopeRequest(true);
+      let content =
+        "Acaba de ser procesada una nueva solicitud de sobre root por parte del usuario con " +
+        parameter.nm +
+        " para el sistema de nombre " +
+        parameter.system +
+        ". Hora estimada de finalización de la solicitud: " +
+        parameter.expirationTime;
+
+      let severity = "success";
+
+      addNewSnackbar(content, severity);
     });
 
-    console.log("Hello");
+    getSocket.on("rootEnvelopeAboutToEnd", (parameter) => {
+      let content =
+        "La solicitud de sobres root activa por el operador " +
+        parameter.nm +
+        " sobre el sistema de nombre " +
+        parameter.system +
+        " esta proxima a terminar. Hora estimada de finalización de la solicitud: " +
+        parameter.expirationTime;
+
+      let severity = "warning";
+
+      addNewSnackbar(content, severity);
+    });
+
+    getSocket.on("rootEnvelopeEnded", (parameter) => {
+      debugger;
+      let content =
+        "La solicitud de sobres root activa por el operador " +
+        parameter.nm +
+        " sobre el sistema de nombre " +
+        parameter.system +
+        " ha finalizado";
+
+      let severity = "error";
+      setsystemIdToRedirect(parameter.systemId);
+      addNewSnackbar(content, severity);
+    });
   }, []);
 
   return (
@@ -307,18 +294,6 @@ function App() {
             });
           }}
         >
-          {/* <Formulario /> */}
-          {/* <MyContext.Provider
-      value={{
-        numero: counter.toString(),
-        color: "Amarillo",
-        cambiarNumero: imprimirConsola,
-        cambiarCounter: setcounter,
-        usuarioActual: usuario,
-        cambiarUsuario: setusuario,
-        guardarSesion: guardarValoresNavegador,
-      }}> */}
-
           {showConfirmDialog && (
             <ConfirmDialog
               title={"De verdad quieres abandonar la pagina?"}
@@ -331,50 +306,66 @@ function App() {
             />
           )}
 
-          {/* {ctx && ctx.department === "Administración" && newEnvelopeRequest && <Snackbar>>} */}
-          {ctx &&
-            snackBars.length > 0 &&
-            ctx.userAditionalInfo.department == "Administración" &&
-            snackBars.map((snackbar, index) => {
-              return (
-                <Snackbar
-                  anchorOrigin={{ vertical: "top", horizontal: "center" }}
-                  open={snackbar.open}
-                  //autoHideDuration={10000}
-                  onClose={(e) => {
-                    let newSnackBarsArray = [...snackBars];
-                    console.log("I'm closing this snackbar", index);
-                    debugger;
-                    newSnackBarsArray[index] = {
-                      ...newSnackBarsArray[index],
-                      open: false,
-                    };
-                    setSnackBars(newSnackBarsArray);
-                    // setSnackBars({
-                    //   open: false,
-                    //   content: "",
-                    //   severity: "success",
-                    // });
-                    // if (snackBars.severity === "success") {
-                    //   history.replace("/HomeOperations");
-                    // }
-                    // setsnackBars({ ...snackBars, open: false });
-                  }}
-                >
-                  {
-                    <Alert
+          <Wraper>
+            <BrowserRouter>
+              {/* {ctx && ctx.department === "Administración" && newEnvelopeRequest && <Snackbar>>} */}
+              {ctx &&
+                snackBars.length > 0 &&
+                ctx.userAditionalInfo.department === "Administración" &&
+                snackBars.map((snackbar, index) => {
+                  return (
+                    <Snackbar
+                      anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                      open={snackbar.open}
                       onClose={(e) => {
-                        setSnackBars({ ...snackBars, open: false });
+                        console.log("This is the clicked snackbar");
+                        //e.stopPropagation();
                       }}
-                      severity={snackbar.severity}
                     >
-                      {snackbar.content}
-                    </Alert>
-                  }
-                </Snackbar>
-              );
-            })}
-          {/* <Snackbar
+                      {
+                        <Alert
+                          onClose={(e) => {
+                            setSnackBars((prev) => {
+                              let newSnackBarsArray = prev.filter(
+                                (snackbar, ind) => ind !== index
+                              );
+
+                              return newSnackBarsArray;
+                            });
+                          }}
+                          severity={snackbar.severity}
+                        >
+                          <div>{snackbar.content}</div>
+
+                          {snackbar.severity === "error" && systemIdToRedirect && (
+                            <Button
+                              style={{ marginTop: "16px" }}
+                              variant="contained"
+                              color="secondary"
+                            >
+                              <Link
+                                style={{
+                                  color: "white",
+                                  textDecoration: "none",
+                                }}
+                                //to="/modifySystem?systemId=20"
+                                to={{
+                                  pathname: `/modifySystem`,
+                                  query: { systemId: systemIdToRedirect },
+                                }}
+
+                                //params={{ systemId: 20 }}
+                              >
+                                Ir
+                              </Link>
+                            </Button>
+                          )}
+                        </Alert>
+                      }
+                    </Snackbar>
+                  );
+                })}
+              {/* <Snackbar
             anchorOrigin={{ vertical: "top", horizontal: "center" }}
             open={true}
             //autoHideDuration={10000}
@@ -393,8 +384,7 @@ function App() {
               </Alert>
             }
           </Snackbar> */}
-          <Wraper>
-            <BrowserRouter>
+
               {/* <Route exact path="/" render={() => <Identifier />} /> */}
               <Route exact path="/" component={Identifier} />
               <Route
@@ -431,7 +421,8 @@ function App() {
               <Route
                 exact
                 path="/waitingForPrint"
-                render={() => <WaitingForPrint />}
+                component={WaitingForPrint}
+                //render={() => <WaitingForPrint />}
               />
 
               <Route

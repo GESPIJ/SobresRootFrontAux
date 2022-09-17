@@ -220,15 +220,12 @@ export default function Orders({ solitudes, fetchSolitudes }) {
                       {
                         <IconButton
                           onClick={async (e) => {
-                            console.log(
-                              "Estamos haciendo click en la que esta bloqueada"
-                            );
                             if (solitude.status === "blocked") {
                               console.log(solitude);
                               const response = await axios.post(
                                 "/admin/unblockUser",
                                 {
-                                  name: solitude.name,
+                                  nm: solitude.nm,
                                 }
                               );
                               fetchSolitudes();

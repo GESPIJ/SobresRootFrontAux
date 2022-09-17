@@ -131,8 +131,9 @@ export default function SignUp() {
       email: validateEmail(user.email),
       password: validatePassword(user.password),
     };
+
     if (
-      validationFields.nm &&
+      validationFields.email &&
       validationFields.password &&
       validationFields.nm
     ) {
@@ -160,12 +161,23 @@ export default function SignUp() {
 
         displaySnackbar("success", response.data.content);
       } else if (response.data.message === "Unauthorized") {
+        debugger;
         setvalidData({
           ...validData,
           password: true,
-          message: "Usted no esta autorizaod",
+          message: "Error",
         });
-        displaySnackbar("error", response.data.content);
+
+        let errorMessage;
+        switch (response.data.content) {
+          case "SequelizeUniqueConstraintError: Validation error":
+            errorMessage = "El correo colocado ya se encuentra en uso";
+            break;
+          default:
+            errorMessage = response.data.content;
+        }
+
+        displaySnackbar("error", errorMessage);
       }
     } else {
       displaySnackbar("error", "Al menos alguno de los campos no es valido");
@@ -334,8 +346,9 @@ export default function SignUp() {
                     }}
                     label="Departamento"
                   >
-                    <MenuItem value={"Operaciones"}>Operaciones</MenuItem>
                     <MenuItem value={"Administración"}>Administración</MenuItem>
+                    <MenuItem value={"Tecnología"}>Tecnología</MenuItem>
+                    <MenuItem value={"Operaciones"}>Operaciones</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>

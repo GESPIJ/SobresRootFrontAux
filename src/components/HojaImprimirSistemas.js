@@ -134,6 +134,7 @@ Font.register({
 });
 
 const MyDocument = (props) => {
+  debugger;
   const history = useHistory();
   const ctx = useContext(MyContext);
   const classes = useStyles();
@@ -170,6 +171,11 @@ const MyDocument = (props) => {
     };
 
     const afterPrintHandler = (e) => {
+      // history.push({
+      //   pathName: "/waitingForPrint",
+      //   //state: props.location.state,
+      // });
+
       history.push({
         pathname: "/waitingForPrint",
         state: props.location.state,
@@ -182,7 +188,7 @@ const MyDocument = (props) => {
     };
     window.addEventListener("beforeprint", beforePrintHandler);
     window.addEventListener("afterprint", afterPrintHandler);
-
+    
     setEnableView(true);
   }, []);
 

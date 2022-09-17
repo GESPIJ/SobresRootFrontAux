@@ -150,7 +150,7 @@ export default function SignUp() {
           password: "123456",
           operator: ctx.usuarioActual,
       }
-      debugger;
+     // debugger;
       history.push({pathname:"/pageToPDF", state:propObjects,})
     }
   };

@@ -72,11 +72,11 @@ export default withRouter(function SignIn({ usuarioActual }) {
 
   //const history = useHistory();
 
-  const fetchLocal = async ({ name, password }) => {
+  const fetchLocal = async ({ nm, password }) => {
     console.log("Llamando a la funcion signin");
     try {
       //debugger;
-      let userDomain = user.nm + "@Banvendes.corp";
+      let userDomain = nm + "@Banvendes.corp";
       if (ctx.userStatus === "active") {
         const payload = { user: userDomain, password };
         //debugger;
@@ -101,7 +101,7 @@ export default withRouter(function SignIn({ usuarioActual }) {
           );
         } else if (message === "loggedIn") {
           setinvalidCredentials(true);
-          setinvalidCredentialsState("Usted ya tiene una sesión activa");
+          setinvalidCredentialsState("Usted ya tiene una sesiÃ³n activa");
           console.log("Este es el mensaje", message);
           return;
         } else if (message === "approved") {
@@ -116,9 +116,8 @@ export default withRouter(function SignIn({ usuarioActual }) {
             message: messageText,
           });
           //window.localStorage.setItem("code", response.data.authorizationCode);
-          ctx.setcurrentJWT(response.data.authorizationCode);
 
-          //La fecha fue modificada para compatibilidad con Mozilla Firefox, ya que Chrome si hace el parse automáticamente.
+          //La fecha fue modificada para compatibilidad con Mozilla Firefox, ya que Chrome si hace el parse automÃ¡ticamente.
           let lastPasswordChange = moment(
             response.data.lastUpdatedPassword,
             "MMM-D-YYYY h-m-s"
@@ -130,6 +129,7 @@ export default withRouter(function SignIn({ usuarioActual }) {
             const responseFailedAttemps = await axios.post(
               "/admin/updateUserFailedAttemps",
               {
+                nm: ctx.nmActual,
                 name: ctx.usuarioActual,
                 failedAttemps: ctx.failedAttemps,
                 reset: true,
@@ -151,7 +151,7 @@ export default withRouter(function SignIn({ usuarioActual }) {
             const intentosQueQuedan = 2 - ctx.failedAttemps;
             const texto =
               ctx.failedAttemps === 1
-                ? "Clave incorrecta, usted tiene solo un intento más antes de bloquear su usuario"
+                ? "Clave incorrecta, usted tiene solo un intento mÃ¡s antes de bloquear su usuario"
                 : "Clave incorrecta, usted tiene " +
                   intentosQueQuedan +
                   " intentos mas antes de bloquear su usuario";
@@ -165,7 +165,7 @@ export default withRouter(function SignIn({ usuarioActual }) {
                 ? " segundo intento"
                 : " tercer intento";
             const logMessage =
-              "Inicio de sesión fallido en autenticación local para " +
+              "Inicio de sesiÃ³n fallido en autenticaciÃ³n local para " +
               ctx.usuarioActual +
               " con nm " +
               ctx.nmActual +
@@ -186,6 +186,7 @@ export default withRouter(function SignIn({ usuarioActual }) {
             const responseFailedAttemps = await axios.post(
               "/admin/updateUserFailedAttemps",
               {
+                nm: ctx.nmActual,
                 name: ctx.usuarioActual,
                 failedAttemps: ctx.failedAttemps,
                 reset: false,
@@ -199,7 +200,7 @@ export default withRouter(function SignIn({ usuarioActual }) {
               pathname: "/",
               state: {
                 helperTextBlockedUser:
-                  "Su usuario se encuentra bloqueado debido a más de 3 intentos fallidos",
+                  "Su usuario se encuentra bloqueado debido a mÃ¡s de 3 intentos fallidos",
                 validateInfo: { password: true },
               },
             });
@@ -241,7 +242,7 @@ export default withRouter(function SignIn({ usuarioActual }) {
     // }
     //
     history.replace("/doubleAuth");
-    //  if (department === "Administración") {
+    //  if (department === "AdministraciÃ³n") {
     //    history.replace("/HomeOperations");
     //  } else if (department === "Operaciones") {
     //    history.replace("/HomeAdmin");
@@ -320,7 +321,7 @@ export default withRouter(function SignIn({ usuarioActual }) {
         <FormDialog
           title={"Actualice su clave para continuar"}
           contentText={
-            " Hemos detectado que su clave tiene mas de 30 días, por motivos de seguridad es necesario que la cambie. Recuerde que la clave debe contener al minimo 8 caracteres especiales incluyendo 1 caracter especial, una letra y un numero"
+            " Hemos detectado que su clave tiene mas de 30 dÃ­as, por motivos de seguridad es necesario que la cambie. Recuerde que la clave debe contener al minimo 8 caracteres especiales incluyendo 1 caracter especial, una letra y un numero"
           }
           cancelFunction={cancelFormFunction}
           confirmFunction={confirmFormFunction}
@@ -358,7 +359,7 @@ export default withRouter(function SignIn({ usuarioActual }) {
             <TextField
               onChange={(e) => {
                 //setusuario(e.target.value);
-                setuser({ ...user, name: e.target.value });
+                setuser({ ...user, nm: e.target.value });
               }}
               onBlur={onBlurHandler}
               variant="outlined"
@@ -383,7 +384,7 @@ export default withRouter(function SignIn({ usuarioActual }) {
               error={invalidCredentials}
               helperText={invalidCredentials ? invalidCredentialsState : ""}
               onChange={(e) => {
-                //setcontraseña(e.target.value);
+                //setcontraseÃ±a(e.target.value);
                 setuser({ ...user, password: e.target.value });
               }}
               name="password"
@@ -409,7 +410,7 @@ export default withRouter(function SignIn({ usuarioActual }) {
               color="primary"
               className={classes.submit}
             >
-              Iniciar sesión
+              Iniciar sesiÃ³n
             </Button>
             {/* <Grid container>
               <Grid item xs>

@@ -68,7 +68,8 @@ const Home = () => {
             Administrador, seleccione una acción
           </Typography>
           <Grid className={classes2.grid} container spacing={5}>
-            <Grid item xs={12} sm={4} md={4} lg={4}>
+            <Grid item xs={1} sm={1} md={1} lg={1}></Grid>
+            <Grid item xs={11} sm={5} md={5} lg={5}>
               <Card
                 className={classes2.card}
                 onClick={() => {
@@ -86,7 +87,7 @@ const Home = () => {
                 />
               </Card>
             </Grid>
-            <Grid item xs={12} sm={4} md={4} lg={4}>
+            <Grid item xs={11} sm={5} md={5} lg={5}>
               <Card
                 className={classes2.card}
                 onClick={() => {
@@ -104,7 +105,8 @@ const Home = () => {
                 />
               </Card>
             </Grid>
-            <Grid item xs={12} sm={4} md={4} lg={4}>
+            <Grid item xs={1} sm={1} md={1} lg={1}></Grid>
+            {/* <Grid item xs={12} sm={4} md={4} lg={4}>
               <Card
                 className={classes2.card}
                 onClick={() => {
@@ -121,9 +123,9 @@ const Home = () => {
                   }
                 />
               </Card>
-            </Grid>
-
-            <Grid item xs={12} sm={4} md={4} lg={4}>
+            </Grid> */}
+            <Grid item xs={1} sm={1} md={1} lg={1}></Grid>
+            <Grid item xs={11} sm={5} md={5} lg={5}>
               <Card
                 className={classes2.card}
                 onClick={() => {
@@ -141,7 +143,7 @@ const Home = () => {
                 />
               </Card>
             </Grid>
-            <Grid item xs={12} sm={4} md={4} lg={4}>
+            <Grid item xs={12} sm={5} md={5} lg={5}>
               <Card
                 className={classes2.card}
                 onClick={() => {
@@ -159,7 +161,7 @@ const Home = () => {
                 />
               </Card>
             </Grid>
-            <Grid item xs={12} sm={4} md={4} lg={4}>
+            {/* <Grid item xs={12} sm={4} md={4} lg={4}>
               <Card
                 className={classes2.card}
                 onClick={() => {
@@ -176,7 +178,7 @@ const Home = () => {
                   }
                 />
               </Card>
-            </Grid>
+            </Grid> */}
           </Grid>
         </Container>
       </div>

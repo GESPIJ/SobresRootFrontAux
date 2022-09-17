@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { CheckBoxTwoTone } from "@material-ui/icons";
 const MyContext = React.createContext({
   usuarioActual: "Greg",
   cambiarNumero: () => {
@@ -27,6 +28,7 @@ export const MyCustomContext = (props) => {
       console.log(usuarioActual);
       const response = await axios.post("/admin/closingTab", {
         name: usuarioActual.usuarioActual,
+        nm: nmActual,
       });
       console.log(response.data.message);
     }
