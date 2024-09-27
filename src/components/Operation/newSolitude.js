@@ -89,12 +89,13 @@ export default function SignUp() {
     //Retornamos las solicitudes
     return filterSolitudes;
   };
-  const fetchSystems = async (solitudes) => {
+  const fetchSystems = async (solicitudes) => {
     //Recibimos como parametro las solicitudes que aun estan activas, de donde obtenemos los sistemas que no estan disponibles para nuevas solicitudes.
-    let busySystems = solitudes.map((solitude) => solitude.SistemaId);
+    let busySystems = solicitudes.map((solicitude) => solicitude.SistemaId);
 
     //Obtenemos el listado de todos los sistemas
-    const response = await axios.get("/admin/systemsAll");
+    const response = await axios.get("/admin/systemsName");
+    // const response = await axios.get("/admin/systemsAll");
     const allSystems = response.data.systems;
 
     // const availableSystems = allSystems.filter(
@@ -107,7 +108,6 @@ export default function SignUp() {
     availableSystems = availableSystems.filter(
       (system) => {
         let result = busySystems.some((busySystem) => busySystem === system.id);
-        console.log(result);
         system.enabled = result;
         //system.disabled = !result;
 
@@ -118,88 +118,127 @@ export default function SignUp() {
       // return system;
     );
 
-    console.log(availableSystems); //Ordenamos los sistemas, mostrando primero aquellos que estan habilitados para nuevas solicitudes
+    //Ordenamos los sistemas, mostrando primero aquellos que estan habilitados para nuevas solicitudes
     availableSystems.sort((a, b) => (a.enabled > b.enabled ? 1 : -1));
     setSystems({ ...systems, systems: availableSystems });
   };
 
-  const registerSolitude = async ({ nm, motivo }) => {
-    const payload = {
-      nm,
-      motivo,
-      usuarioOperaciones: ctx.nmActual,
-      sistema: systems.selectedSystem,
-    };
-
-    //Server Response
-    // socket.emit("newRootEnvelope", {
-    //   nm: ctx.nmActual,
-    //   system: systems.selectedSystem,
-    //   expirationTime: moment().add(8, "hours").format("HH:mm"),
-    // });
-
-    console.log(validData);
-
-    if (validData.nm) {
-      const response = await axios.post("/admin/registerSolitude", payload);
-
-      const notificationResponse = await axios.post("/admin/notifySolitudeByEmail", {
-        nm: ctx.nmActual,
-        textContent: `Se ha procesado una nueva solicitud de sobre root por parte del operador con NM ${ctx.nmActual} sobre el sistema de nombre ${systems.selectedSystem}`,
-        textTitle: `Nueva solicitud de sobre root procesada sobre el sistema de nombre ${systems.selectedSystem}  `
+  const fetchSelectedSystem = async (systemId) => {
+    try {
+      console.log(systemId);
+      const response = await axios.post("/admin/getSystemInfo", {
+        id: systemId,
       });
+      return response;
+    } catch (e) {
+      console.log(`error getReporteData ${e}`);
+    }
+  };
 
-      // // If the creation of the new solitude was succesfull
-      if (response.data.mensaje === "Valido") {
-        // const response = await axios.post("/admin/notifySolitudeByEmail", {
-        //   nm: ctx.nmActual,
-        //   system: systems.selectedSystem,
-        //   expirationTime: moment().add(8, "hours").format("HH:mm"),
-        // });
+  const fetchSystemInfo = async (systemId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/api/detalle-no-magneticos`,
+        {
+          params: {
+            id: systemId ?? 18,
+          },
+        }
+      );
+    } catch (e) {
+      console.log(`error getReporteData ${e}`);
+    }
+  };
 
-        //socket.emit("newRootEnvelope", { nm: ctx.nmActual });
+  const registerSolitude = async ({ nm, motivo }) => {
+    try {
+      const payload = {
+        nm,
+        motivo,
+        usuarioOperaciones: ctx.nmActual,
+        sistema: systems.selectedSystem,
+      };
+      // console.log(payload);
+      //Server Response
+      // socket.emit("newRootEnvelope", {
+      //   nm: ctx.nmActual,
+      //   system: systems.selectedSystem,
+      //   expirationTime: moment().add(8, "hours").format("HH:mm"),
+      // });
 
-        socket.emit("newRootEnvelope", {
-          nm: ctx.nmActual,
-          system: systems.selectedSystem,
-          expirationTime: moment().add(8, "hours").format("HH:mm"),
-        });
+      if (validData.nm) {
+        const response = await axios.post("/admin/registerSolitude", payload);
 
-        ctx.setcurrentSolitude({
-          ...ctx.currentSolitude,
-          id: response.data.id,
-        });
-        const messageText =
-          "Nueva solicitud creada con exito para el " +
-          systems.selectedSystem +
-          " con id " +
-          response.data.sistema +
-          " por parte del usuario de operaciones " +
-          ctx.usuarioActual +
-          " con nm " +
-          ctx.nmActual;
-        //If succesfull we create the corresponding Log
-        await axios.post("/admin/registerLog", {
-          message: messageText,
-          solitude: response.data.id,
-        });
-
-        let systemInfo = systems.systems.find(
-          (sys) => sys.name === systems.selectedSystem
+        const notificationResponse = await axios.post(
+          "/admin/notifySolitudeByEmail",
+          {
+            nm: ctx.nmActual,
+            textContent: `Se ha procesado una nueva solicitud de sobre root por parte del operador con NM ${ctx.nmActual} sobre el sistema de nombre ${systems.selectedSystem}`,
+            textTitle: `Nueva solicitud de sobre root procesada sobre el sistema de nombre ${systems.selectedSystem}  `,
+          }
         );
 
-        const propObjects = {
-          date: new Date().toDateString(),
-          //name: response.data.systemName,
-          name: systems.selectedSystem,
-          admin: systemInfo.admin,
-          ip: systemInfo.ip,
-          port: systemInfo.port,
-          password: systemInfo.password,
-          operator: ctx.usuarioActual,
-        };
-        history.replace({ pathname: "/pageToPDF", state: propObjects });
+        // // If the creation of the new solitude was succesfull
+        if (response.data.mensaje === "Valido") {
+          // const response = await axios.post("/admin/notifySolitudeByEmail", {
+          //   nm: ctx.nmActual,
+          //   system: systems.selectedSystem,
+          //   expirationTime: moment().add(8, "hours").format("HH:mm"),
+          // });
+
+          //socket.emit("newRootEnvelope", { nm: ctx.nmActual });
+
+          socket.emit("newRootEnvelope", {
+            nm: ctx.nmActual,
+            system: systems.selectedSystem,
+            expirationTime: moment().add(8, "hours").format("HH:mm"),
+          });
+
+          ctx.setcurrentSolitude({
+            ...ctx.currentSolitude,
+            id: response.data.id,
+          });
+          const messageText =
+            "Nueva solicitud creada con exito para el " +
+            systems.selectedSystem +
+            " con id " +
+            response.data.sistema +
+            " por parte del usuario de operaciones " +
+            ctx.usuarioActual +
+            " con nm " +
+            ctx.nmActual;
+          //If succesfull we create the corresponding Log
+          await axios.post("/admin/registerLog", {
+            message: messageText,
+            solitude: response.data.id,
+          });
+
+          let systemSelected = systems.systems.find(
+            (sys) => sys.name === systems.selectedSystem
+          );
+
+          console.log(systemSelected);
+
+          let systemInfo = await fetchSelectedSystem(systemSelected.id);
+          systemInfo = systemInfo.data.systems[0];
+          console.log(systemInfo.ip);
+          const propObjects = {
+            date: new Date().toDateString(),
+            //name: response.data.systemName,
+            name: systems.selectedSystem,
+            admin: systemInfo.admin,
+            ip: systemInfo.ip,
+            port: systemInfo.port,
+            password: systemInfo.password,
+            operator: ctx.usuarioActual,
+          };
+          console.log(propObjects);
+
+          // history.replace({ pathname: "/pageToPDF", state: propObjects });
+        }
       }
+    } catch (e) {
+      console.log(e);
     }
   };
 

@@ -8,11 +8,7 @@ import BarraNavegacion from "../BarraNavegacion";
 import MyContext from "../../context/mycontext";
 
 export default function SignUp() {
-
   const ctx = useContext(MyContext);
-
-  console.log("This is the ctx");
-  console.log(ctx);
 
   //Component States
   const [systems, setSystems] = useState({ systems: [], selectedSystem: "" });
@@ -25,10 +21,14 @@ export default function SignUp() {
     //console.log(response);
     debugger;
     let response;
-    if(ctx.userAditionalInfo.department == "Administración"){
-      response = await axios.post("/admin/getSystemByNMSecurity", {id: ctx.userAditionalInfo.id});
-    }else{
-      response = await axios.post("/admin/getSystemByNMTecnologie", {id: ctx.userAditionalInfo.id});
+    if (ctx.userAditionalInfo.department == "Administración") {
+      response = await axios.post("/admin/getSystemByNMSecurity", {
+        id: ctx.userAditionalInfo.id,
+      });
+    } else {
+      response = await axios.post("/admin/getSystemByNMTecnologie", {
+        id: ctx.userAditionalInfo.id,
+      });
     }
     setSystems({ ...systems, systems: response.data.systems.reverse() });
     //We cancel the loader spinner

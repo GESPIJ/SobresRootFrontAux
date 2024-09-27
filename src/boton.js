@@ -8,12 +8,12 @@ function boton() {
           <div
             style={{ position: "relative", top: "60px" }}
             onClick={() => {
-              console.log("Estoy presionando el boton");
               context.numero = "Siete";
               //debugger;
               context.cambiarNumero();
               context.cambiarCounter((prev) => prev + 1);
-            }}>
+            }}
+          >
             {context.numero}
           </div>
         );

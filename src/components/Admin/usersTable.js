@@ -187,7 +187,6 @@ export default function Orders({ solitudes, fetchSolitudes }) {
                       {
                         <IconButton
                           onClick={(e) => {
-                            console.log("Click en el lapiz");
                             ctx.setpreviousPage("/usersTable");
                             history.push({
                               pathname: "/modifyUser",
@@ -221,7 +220,6 @@ export default function Orders({ solitudes, fetchSolitudes }) {
                         <IconButton
                           onClick={async (e) => {
                             if (solitude.status === "blocked") {
-                              console.log(solitude);
                               const response = await axios.post(
                                 "/admin/unblockUser",
                                 {

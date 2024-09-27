@@ -18,9 +18,6 @@ const ErrorFallBackPage = ({ redirectFcn }) => {
   const classes = useStyles();
 
   const redirectToLogin = () => {
-    console.log(history);
-    console.log(useHistory);
-
     history.replace("/");
   };
 

@@ -59,7 +59,6 @@ export default function SignIn({ usuarioActual }) {
       "http://localhost:5000/localSignIn",
       password
     );
-    console.log(response);
   };
   const classes = useStyles();
 
@@ -142,7 +141,7 @@ export default function SignIn({ usuarioActual }) {
                 e.preventDefault();
                 //console.log(usuario);
                 //console.log(contraseña);
-                console.log("Se esta ejecutando el click");
+
                 fetchLocal(usuario, contraseña);
               }}
               color="primary"

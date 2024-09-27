@@ -67,7 +67,7 @@ export default function DataTable() {
     const payload = { id: "123456" };
     //console.log("Este es el id ", ctx.nmActual);
     const response = await axios.post("/operation/solitudesAll", payload);
-    console.log(response);
+
     //debugger;
     let formattedRow = response.data.systems.map((system)=>{
         return {

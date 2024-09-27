@@ -134,6 +134,7 @@ Font.register({
 });
 
 const MyDocument = (props) => {
+  console.log(props);
   debugger;
   const history = useHistory();
   const ctx = useContext(MyContext);
@@ -166,9 +167,7 @@ const MyDocument = (props) => {
   const [enableView, setEnableView] = useState(false);
 
   useEffect(() => {
-    const beforePrintHandler = (e) => {
-      console.log("Ya termino el tiempo en el before print");
-    };
+    const beforePrintHandler = (e) => {};
 
     const afterPrintHandler = (e) => {
       // history.push({
@@ -182,13 +181,11 @@ const MyDocument = (props) => {
       });
 
       // {pathname:"/pageToPDF", state:propObjects,}
-      console.log("La impresión termino");
-      console.log(e);
       setEnableView(false);
     };
     window.addEventListener("beforeprint", beforePrintHandler);
     window.addEventListener("afterprint", afterPrintHandler);
-    
+
     setEnableView(true);
   }, []);
 

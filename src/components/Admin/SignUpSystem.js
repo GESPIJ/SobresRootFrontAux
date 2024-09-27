@@ -74,12 +74,12 @@ export default function SignUp() {
     currentPassword: "",
     admin: "",
     ambiente: "",
-    custodio1: {name: '', id: ''},
-    custodio2: {name: '', id: ''},
-    componente1: '',
-    componente2: '',
+    custodio1: { name: "", id: "" },
+    custodio2: { name: "", id: "" },
+    componente1: "",
+    componente2: "",
     showComponente1: false,
-    showComponente2: false
+    showComponente2: false,
   });
   const [validData, setvalidData] = useState({
     ip: true,
@@ -93,30 +93,35 @@ export default function SignUp() {
     severity: "success",
   });
 
-  const [custodioSeguridad, setCustodiosSeguridad] = useState({custodios: [], selectedCustodio: null});
-  const [custodioTecnología, setCustodiosTecnologia] = useState({custodios: [], selectedCustodio: null})
+  const [custodioSeguridad, setCustodiosSeguridad] = useState({
+    custodios: [],
+    selectedCustodio: null,
+  });
+  const [custodioTecnología, setCustodiosTecnologia] = useState({
+    custodios: [],
+    selectedCustodio: null,
+  });
 
   const classes = useStyles();
 
-
-
   useEffect(() => {
     getSecurityCustodies();
-    getTecnologieCustodies()
-  }, [])
-  
+    getTecnologieCustodies();
+  }, []);
 
   //Component Functions
 
-  const getSecurityCustodies = async ()=>{
+  const getSecurityCustodies = async () => {
     let custodios = await axios.get("http://localhost:4000/admin/adminUsers");
-    setCustodiosSeguridad({custodios: custodios.data.users})
-  }
+    setCustodiosSeguridad({ custodios: custodios.data.users });
+  };
 
-  const getTecnologieCustodies = async ()=>{
-    let custodios = await axios.get("http://localhost:4000/admin/technologieUsers");
-    setCustodiosTecnologia({custodios: custodios.data.users})
-  }
+  const getTecnologieCustodies = async () => {
+    let custodios = await axios.get(
+      "http://localhost:4000/admin/technologieUsers"
+    );
+    setCustodiosTecnologia({ custodios: custodios.data.users });
+  };
 
   //Function for displaying the Snackbar wether success or error
   const displaySnackbar = (severity, content) => {
@@ -133,7 +138,17 @@ export default function SignUp() {
   };
 
   //For creating a new system on the DB
-  const registerSystem = async ({ name, ip, port, admin, currentPassword, custodio1, custodio2, componente1, componente2 }) => {
+  const registerSystem = async ({
+    name,
+    ip,
+    port,
+    admin,
+    currentPassword,
+    custodio1,
+    custodio2,
+    componente1,
+    componente2,
+  }) => {
     const payload = {
       name,
       ip,
@@ -143,10 +158,9 @@ export default function SignUp() {
       custodio1,
       componente1,
       custodio2,
-      componente2
+      componente2,
     };
 
-    console.log(payload);
     debugger;
 
     //Server Response
@@ -301,7 +315,6 @@ export default function SignUp() {
                     }
                   }}
                 />
-
               </Grid>
 
               <Grid item xs={6}>
@@ -336,8 +349,7 @@ export default function SignUp() {
               </Grid>
 
               <Grid item xs={6}>
-
-              <FormControl className={classes.formControl} variant="outlined">
+                <FormControl className={classes.formControl} variant="outlined">
                   <InputLabel id="demo-simple-select-outlined-label">
                     Custodio 1
                   </InputLabel>
@@ -346,20 +358,20 @@ export default function SignUp() {
                     id="demo-simple-select-outlined"
                     value={system.custodio1}
                     onChange={(e) => {
-                      setsystem((prev)=>({...prev, custodio1: e.target.value}))
+                      setsystem((prev) => ({
+                        ...prev,
+                        custodio1: e.target.value,
+                      }));
                     }}
                     label="Custodio Seguridad"
                   >
-                  {
-                    custodioSeguridad.custodios.map (custodio=> {
+                    {custodioSeguridad.custodios.map((custodio) => {
                       return (
                         <MenuItem value={custodio.id}>
-                      {custodio.name + " " + custodio.lastname}
-                    </MenuItem>
-                      )
-                    })
-                  }
-
+                          {custodio.name + " " + custodio.lastname}
+                        </MenuItem>
+                      );
+                    })}
                   </Select>
                 </FormControl>
               </Grid>
@@ -377,7 +389,12 @@ export default function SignUp() {
                     startAdornment: (
                       <InputAdornment
                         className={classes.visibilityIcon}
-                        onClick={()=>{setsystem({...system, showComponente1: !system.showComponente1})}}
+                        onClick={() => {
+                          setsystem({
+                            ...system,
+                            showComponente1: !system.showComponente1,
+                          });
+                        }}
                       >
                         <VisibilityIcon />
                       </InputAdornment>
@@ -389,8 +406,7 @@ export default function SignUp() {
                 />
               </Grid>
               <Grid item xs={6}>
-
-              <FormControl className={classes.formControl} variant="outlined">
+                <FormControl className={classes.formControl} variant="outlined">
                   <InputLabel id="demo-simple-select-outlined-label">
                     Custodio 2
                   </InputLabel>
@@ -399,18 +415,20 @@ export default function SignUp() {
                     id="demo-simple-select-outlined"
                     value={system.custodio2}
                     onChange={(e) => {
-                      setsystem((prev)=>({...prev, custodio2: e.target.value}))
+                      setsystem((prev) => ({
+                        ...prev,
+                        custodio2: e.target.value,
+                      }));
                     }}
                     label="Custodio Tecnología"
-                  >{
-                    custodioTecnología.custodios.map(custodio=> {
+                  >
+                    {custodioTecnología.custodios.map((custodio) => {
                       return (
                         <MenuItem value={custodio.id}>
-                      {custodio.name + " " + custodio.lastname}
-                    </MenuItem>
-                      )
-                    })
-                  }
+                          {custodio.name + " " + custodio.lastname}
+                        </MenuItem>
+                      );
+                    })}
                   </Select>
                 </FormControl>
                 {/* <TextField
@@ -441,7 +459,12 @@ export default function SignUp() {
                     startAdornment: (
                       <InputAdornment
                         className={classes.visibilityIcon}
-                        onClick={()=>{setsystem({...system, showComponente2: !system.showComponente2})}}
+                        onClick={() => {
+                          setsystem({
+                            ...system,
+                            showComponente2: !system.showComponente2,
+                          });
+                        }}
                       >
                         <VisibilityIcon />
                       </InputAdornment>

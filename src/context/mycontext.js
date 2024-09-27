@@ -3,9 +3,7 @@ import axios from "axios";
 import { CheckBoxTwoTone } from "@material-ui/icons";
 const MyContext = React.createContext({
   usuarioActual: "Greg",
-  cambiarNumero: () => {
-    console.log("hola");
-  },
+  cambiarNumero: () => {},
 });
 
 export const MyCustomContext = (props) => {
@@ -24,13 +22,10 @@ export const MyCustomContext = (props) => {
   const cerrandoTab = async (windowAboutToClose) => {
     if (!windowAboutToClose.current) {
       windowAboutToClose.current = true;
-      console.log("Este es el usuario que se esta mandando", usuarioActual);
-      console.log(usuarioActual);
       const response = await axios.post("/admin/closingTab", {
         name: usuarioActual.usuarioActual,
         nm: nmActual,
       });
-      console.log(response.data.message);
     }
   };
 

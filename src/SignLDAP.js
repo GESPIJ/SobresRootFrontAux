@@ -73,20 +73,15 @@ export default withRouter(function SignIn({ usuarioActual }) {
   //const history = useHistory();
 
   const fetchLocal = async ({ nm, password }) => {
-    console.log("Llamando a la funcion signin");
     try {
       //debugger;
       let userDomain = nm + "@Banvendes.corp";
       if (ctx.userStatus === "active") {
         const payload = { user: userDomain, password };
         //debugger;
-        console.log("El usuario que estoy mandando es ");
-        console.log(userDomain);
-        console.log("Y la clave es", password);
         const response = await axios.post("/admin/signInLDAP", payload);
         //const response = await axios.post("/admin/signInLDAP", payload);
-        console.log("Esta es la respuesta que obtengo del directorio Activo");
-        console.log(response);
+
         //debugger;
 
         let message = response.data.message;
@@ -102,10 +97,9 @@ export default withRouter(function SignIn({ usuarioActual }) {
         } else if (message === "loggedIn") {
           setinvalidCredentials(true);
           setinvalidCredentialsState("Usted ya tiene una sesiÃ³n activa");
-          console.log("Este es el mensaje", message);
+
           return;
         } else if (message === "approved") {
-          console.log(response);
           setinvalidCredentials(false);
           setuser({ ...user, department: response.data.department });
           ctx.settimerForJwt(!ctx.timerForJwt);
@@ -138,7 +132,6 @@ export default withRouter(function SignIn({ usuarioActual }) {
             ctx.setisSuccesfullyLogged(true);
             redirectToHomePage();
           } else {
-            console.log(ctx.usuarioActual);
             setchangeOldPassword(passwordTooOld);
           }
         }
@@ -192,8 +185,6 @@ export default withRouter(function SignIn({ usuarioActual }) {
                 reset: false,
               }
             );
-
-            console.log(responseFailedAttemps);
             ctx.setUserStatus("blocked");
             ctx.setFailedAttemps(ctx.failedAttemps + 1);
             history.replace({
@@ -218,7 +209,6 @@ export default withRouter(function SignIn({ usuarioActual }) {
 
         //setredirect(true);
       } else {
-        console.log("BLOCKEEEEEEEEEEEEEEEEEEEED USER");
       }
     } catch (e) {
       console.log(e);
@@ -287,7 +277,6 @@ export default withRouter(function SignIn({ usuarioActual }) {
   const onBlurHandler = (e) => {
     let name = e.target.value;
     let validationResult = validateEmail(name);
-    console.log(validationResult);
     //setinvalidEmail(!validationResult);
     //let re = /nm[0-9]{6}/;
     //let re = /nm[0-9]{6}/;
@@ -300,7 +289,6 @@ export default withRouter(function SignIn({ usuarioActual }) {
     //console.log(contextType);
     //console.log(props);
     //debugger;
-    console.log(ctx);
   }, []);
   return (
     <div className="signIn">

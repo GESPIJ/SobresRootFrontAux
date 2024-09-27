@@ -145,7 +145,6 @@ export default function Orders({ solitudes }) {
                       {
                         <IconButton
                           onClick={(e) => {
-                            console.log("Click en el lapiz");
                             ctx.setpreviousPage("/printersTable");
                             history.push({
                               pathname: "/modifyPrinter",

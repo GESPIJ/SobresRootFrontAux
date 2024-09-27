@@ -35,7 +35,6 @@ const BarraNavegacion = () => {
       name: ctx.usuarioActual,
       nm: ctx.nmActual,
     });
-    console.log(response.data.message);
   };
 
   return (
@@ -64,14 +63,13 @@ const BarraNavegacion = () => {
                   });
                   await cerrandoTab();
 
-                  console.log("La ventana se esta empezando a cerrar");
                   try {
                     socket.disconnect();
                     history.replace("/");
                   } catch (err) {}
                 }
 
-                // history.replace("/");
+                history.replace("/");
               }}
               color="inherit"
             >

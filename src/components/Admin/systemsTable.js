@@ -192,7 +192,6 @@ export default function Orders({ solitudes, fetchSystems }) {
                       {
                         <IconButton
                           onClick={(e) => {
-                            console.log("Click en el lapiz");
                             ctx.setpreviousPage("/systemsTable");
                             history.push({
                               pathname: "/modifySystem",

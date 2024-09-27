@@ -279,7 +279,6 @@ export default function SignUp() {
                   helperText={!validData.email ? "El correo no es valido" : ""}
                   value={user.email}
                   onBlur={(e) => {
-                    console.log(validateEmail(e.target.value));
                     setvalidData({
                       ...validData,
 
@@ -371,7 +370,6 @@ export default function SignUp() {
                       password: !validatePassword(e.target.value),
                     });
                     let valid = validatePassword(e.target.value);
-                    console.log(valid);
                   }}
                   onChange={(e) => {
                     setuser({ ...user, password: e.target.value });

@@ -35,7 +35,6 @@ export default function ReportesDetallesTable({ solitudes, id }) {
         id: "123456",
       };
 
-      console.log(params);
       //Server Response
       const response = await axios.post("/operation/solitudesAll", params);
       //   let response = await axios.get(`http://${api}/api/detalles-reportes`, {
@@ -60,9 +59,9 @@ export default function ReportesDetallesTable({ solitudes, id }) {
   const fetchSystems = async () => {
     //const payload = { id: ctx.nmActual };
     const payload = { id: "123456" };
-    console.log("Este es el id ", ctx.nmActual);
+
     const response = await axios.post("/operation/solitudesAll", payload);
-    console.log(response);
+
     setSystems({ ...systems, systems: response.data.systems.reverse() });
   };
 
@@ -217,7 +216,6 @@ export default function ReportesDetallesTable({ solitudes, id }) {
             icon: () => <Button color="primary">Ver</Button>,
             tooltip: "Ver detalles",
             onClick: (event, rowData) => {
-              console.log("Hola");
               //   if (rowData.id)
               //     return router.push(
               //       `/reporte-detalles/[id]?afectado=${rowData.nombre}`,

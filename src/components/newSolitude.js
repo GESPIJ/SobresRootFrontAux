@@ -112,15 +112,14 @@ export default function SignUp() {
   };
   const fetchSystems = async (solitudes) => {
 
-    const response = await axios.get("http://localhost:5000/systemsAll");
+    const response = await axios.get("http://localhost:5000/systemsName");
     let allSystems = response.data.systems;
     let availableSystems = allSystems.filter (system=>)
-    console.log(response);
-    setSystems({ ...systems, systems: response.data.systems });
+     setSystems({ ...systems, systems: response.data.systems });
   };
 
   const registerSolitude = async ({ nm, motivo }) => {
-    console.log(ctx.usuarioActual);
+
     const payload = {
       nm,
       motivo,
@@ -128,7 +127,6 @@ export default function SignUp() {
       sistema: systems.selectedSystem,
     };
 
-    console.log(payload);
     const response = await axios.post(
       "http://localhost:5000/admin/registerSolitude",
       payload
@@ -158,8 +156,7 @@ export default function SignUp() {
   useEffect(async () => {
     let currentSolitudes = await fetchSolitudes();
     fetchSystems(currentSolitudes);
-    console.log("In new solitude this is the obtained socket!!!");
-    console.log(socket)
+
     return () => {};
   }, []);
 

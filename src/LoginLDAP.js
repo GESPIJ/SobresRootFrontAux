@@ -51,9 +51,9 @@ function LoginLDAP({ usuarioActual, cambiarUsuarioActual, history }) {
               onClick={(e) => {
                 e.preventDefault();
                 history.goBack();
-                console.log("Haciendo submit");
               }}
-              className="boton"></button>
+              className="boton"
+            ></button>
           }
           {/* <Link className="boton" to="/">
             Registrar

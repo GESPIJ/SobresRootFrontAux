@@ -215,14 +215,10 @@ const MyDocument = (props) => {
   const [enableView, setEnableView] = useState(false);
 
   useEffect(() => {
-    const beforePrintHandler = (e) => {
-      console.log("Ya termino el tiempo en el before print");
-    };
+    const beforePrintHandler = (e) => {};
 
     const afterPrintHandler = (e) => {
       //history.replace("/waitingForPrint");
-      console.log("La impresión termino");
-      console.log(e);
       // setEnableView(false);
     };
     window.addEventListener("beforeprint", beforePrintHandler);
@@ -882,7 +878,6 @@ const MyDocument = (props) => {
           ></textarea>
           <button
             onClick={() => {
-              console.log(texto);
               let sentences = texto.split("\n");
               let numberOfRows = sentences.length;
 

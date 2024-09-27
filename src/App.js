@@ -318,7 +318,6 @@ function App() {
                       anchorOrigin={{ vertical: "top", horizontal: "center" }}
                       open={snackbar.open}
                       onClose={(e) => {
-                        console.log("This is the clicked snackbar");
                         //e.stopPropagation();
                       }}
                     >
@@ -337,29 +336,30 @@ function App() {
                         >
                           <div>{snackbar.content}</div>
 
-                          {snackbar.severity === "error" && systemIdToRedirect && (
-                            <Button
-                              style={{ marginTop: "16px" }}
-                              variant="contained"
-                              color="secondary"
-                            >
-                              <Link
-                                style={{
-                                  color: "white",
-                                  textDecoration: "none",
-                                }}
-                                //to="/modifySystem?systemId=20"
-                                to={{
-                                  pathname: `/modifySystem`,
-                                  query: { systemId: systemIdToRedirect },
-                                }}
-
-                                //params={{ systemId: 20 }}
+                          {snackbar.severity === "error" &&
+                            systemIdToRedirect && (
+                              <Button
+                                style={{ marginTop: "16px" }}
+                                variant="contained"
+                                color="secondary"
                               >
-                                Ir
-                              </Link>
-                            </Button>
-                          )}
+                                <Link
+                                  style={{
+                                    color: "white",
+                                    textDecoration: "none",
+                                  }}
+                                  //to="/modifySystem?systemId=20"
+                                  to={{
+                                    pathname: `/modifySystem`,
+                                    query: { systemId: systemIdToRedirect },
+                                  }}
+
+                                  //params={{ systemId: 20 }}
+                                >
+                                  Ir
+                                </Link>
+                              </Button>
+                            )}
                         </Alert>
                       }
                     </Snackbar>

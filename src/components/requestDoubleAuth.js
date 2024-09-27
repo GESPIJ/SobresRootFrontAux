@@ -77,7 +77,6 @@ export default function SignUp() {
     };
     //debugger;
     const response = await axios.post("/admin/solitudeCode", payload);
-    console.log(response);
   };
 
   const disableTemporarlyRequestButton = () => {
@@ -87,14 +86,12 @@ export default function SignUp() {
     }, 30000);
   };
   const signIn = async (nm) => {
-    console.log("Enviando codigo al servidor");
     const payload = {
       nm: ctx.nmActual,
       codigoAcceso: accessCode,
     };
 
     const response = await axios.post("/admin/validateCode", payload);
-    console.log(response);
     //debugger;
     let currentDate = new Date();
     currentDate = moment(currentDate);
@@ -117,7 +114,6 @@ export default function SignUp() {
         message: response.data.message,
       });
 
-
       if (ctx.failedAttemps < 2) {
         const intentosQueQuedan = 2 - ctx.failedAttemps;
         const texto =
@@ -133,7 +129,7 @@ export default function SignUp() {
           state: true,
           message: texto,
         });
-  
+
         const tryText =
           ctx.failedAttemps === 0
             ? " primer intento"
@@ -184,9 +180,10 @@ export default function SignUp() {
         setvalidCode({
           ...validCode,
           state: true,
-          message: "Su usuario se encuentra bloqueado debido a más de 3 intentos fallidos",
+          message:
+            "Su usuario se encuentra bloqueado debido a más de 3 intentos fallidos",
         });
-  
+
         ctx.setFailedAttemps(ctx.failedAttemps + 1);
         history.replace({
           pathname: "/",

@@ -148,7 +148,6 @@ export default function SignUp(props) {
               onClick={(e) => {
                 e.preventDefault();
 
-                console.log(ctx.userStatus);
                 signIn(nm);
               }}
               className={classes.submit}

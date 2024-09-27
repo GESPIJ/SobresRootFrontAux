@@ -77,13 +77,14 @@ const Home = (props) => {
     //Server Response
     const response = await axios.post("/admin/finishSolitude", payload);
     //await axios.post("/admin/generateNewComponent", {id: ctx.currentSolitude.SistemaId});
-    await axios.post("/admin/requireSystemNewPassword", {id: ctx.currentSolitude.SistemaId});
+    await axios.post("/admin/requireSystemNewPassword", {
+      id: ctx.currentSolitude.SistemaId,
+    });
     // const notificationResponse = await axios.post("/admin/notifySolitudeByEmail", {
     //   nm: ctx.nmActual,
     //   textContent: `La solicitud de sobre root para el sistema de nombre ${ctx.currentSolitude.systemName} a cargo del operador con ${ctx.nmActual} ha finalizado`,
     //   textTitle: `Solicitud de sobre root finalizada para el sistema de nombre ${ctx.currentSolitude.systemName} `
     // });
-
 
     if (response.data.message === "success") {
       history.replace("/solitudesTable");
@@ -125,7 +126,6 @@ const Home = (props) => {
     }
 
     setTimeout(() => {
-      console.log(counterTimer);
       if (counterTimer) {
         let dateVariable = new Date(counterTimer * 1000)
           .toISOString()
@@ -187,7 +187,7 @@ const Home = (props) => {
                 className={classes2.card}
                 onClick={() => {
                   //history.push("/selectpRINTER");
-                  console.log(ctx.currentSolitude);
+
                   finalizarSolicitud(ctx.currentSolitude.id);
                 }}
               >

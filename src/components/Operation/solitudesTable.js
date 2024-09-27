@@ -146,8 +146,6 @@ export default function Orders({ solitudes }) {
       "/admin/updateSentNotificationForSolitude",
       solitude
     );
-    console.log("This is the response");
-    console.log(response);
   };
 
   let setSolitudeFinishedNotificationAsSent = async (solitude) => {
@@ -159,7 +157,9 @@ export default function Orders({ solitudes }) {
 
   let finishSolitude = async (solitude) => {
     let response = await axios.post("/admin/finishSolitude", solitude);
-    await axios.post("/admin/requireSystemNewPassword", {id: solitude.SistemaId});
+    await axios.post("/admin/requireSystemNewPassword", {
+      id: solitude.SistemaId,
+    });
     //await axios.post("/admin/generateNewComponent", {id: solitude.SistemaId});
   };
 
@@ -377,7 +377,12 @@ export default function Orders({ solitudes }) {
                               //debugger;
 
                               if (solitude.state) {
-                                ctx.setcurrentSolitude({ id: solitude.id, systemName: solitude.systemName, nmSolicitante: solitude.nmSolicitante, SistemaId: solitude.SistemaId });
+                                ctx.setcurrentSolitude({
+                                  id: solitude.id,
+                                  systemName: solitude.systemName,
+                                  nmSolicitante: solitude.nmSolicitante,
+                                  SistemaId: solitude.SistemaId,
+                                });
                                 history.replace({
                                   pathname: "/timeoutcounter",
 

@@ -94,7 +94,7 @@ export default function SignUp(props) {
     password: false,
   });
 
-  const [newCode, setnewCode] = useState('')
+  const [newCode, setnewCode] = useState("");
   const [snackBars, setsnackBars] = useState({
     open: false,
     content: "",
@@ -102,7 +102,6 @@ export default function SignUp(props) {
   });
 
   const toggleVisibility = () => {
-    console.log("Click en toggle visibility");
     setvisiblePassword(!visiblePassword);
   };
 
@@ -119,7 +118,16 @@ export default function SignUp(props) {
   };
 
   //Function for updating the values of an existing system
-  const modifySystem = async ({ id, name, ip, port, password, admin, componente1, componente2 }) => {
+  const modifySystem = async ({
+    id,
+    name,
+    ip,
+    port,
+    password,
+    admin,
+    componente1,
+    componente2,
+  }) => {
     const payload = {
       id,
       name,
@@ -128,7 +136,7 @@ export default function SignUp(props) {
       password,
       admin,
       componente1,
-      componente2
+      componente2,
     };
 
     //Server Response
@@ -146,10 +154,10 @@ export default function SignUp(props) {
     return re.test(String(nm).toLowerCase());
   };
 
-  const generateNewCode = async()=>{
+  const generateNewCode = async () => {
     let response = await axios.post("/admin/generateNewComponentCode");
-    setnewCode(response.data.code)
-  }
+    setnewCode(response.data.code);
+  };
 
   useEffect(() => {
     if (!system) {
@@ -309,10 +317,19 @@ export default function SignUp(props) {
                     label="Componente"
                     type={visiblePassword ? "text" : "password"}
                     name="password"
-                    value={ ctx.userAditionalInfo.department == 'Administración'?system.componente1: system.componente2}
+                    value={
+                      ctx.userAditionalInfo.department == "Administración"
+                        ? system.componente1
+                        : system.componente2
+                    }
                     autoComplete="nm"
                     InputProps={{
-                      readOnly: (!system.needPasswordChangeAdmin && ctx.userAditionalInfo.department == "Administración") || (!system.needPasswordChangeTech && ctx.userAditionalInfo.department == 'Tecnología'),
+                      readOnly:
+                        (!system.needPasswordChangeAdmin &&
+                          ctx.userAditionalInfo.department ==
+                            "Administración") ||
+                        (!system.needPasswordChangeTech &&
+                          ctx.userAditionalInfo.department == "Tecnología"),
                       startAdornment: (
                         <InputAdornment
                           className={classes.visibilityIcon}
@@ -329,50 +346,55 @@ export default function SignUp(props) {
                       });
                     }}
                     onChange={(e) => {
-                      if (ctx.userAditionalInfo.department == "Administración"){
+                      if (
+                        ctx.userAditionalInfo.department == "Administración"
+                      ) {
                         setsystem({ ...system, componente1: e.target.value });
-                      }else{
+                      } else {
                         setsystem({ ...system, componente2: e.target.value });
                       }
-                      
                     }}
                   />
                 </Grid>
               </Grid>
 
-              { ((system.needPasswordChangeAdmin && ctx.userAditionalInfo.department == 'Administración') || (system.needPasswordChangeTech && ctx.userAditionalInfo.department == 'Tecnología')) && <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
-                  <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    onClick={async (e) => {
-                      e.preventDefault();
-                      //await axios.post("/admin/generateNewComponent", {id: 7} )
-                      generateNewCode();
-                    }}
-                    className={classes.submit}
-                  >
-                    Generar codigo
-                  </Button>
+              {((system.needPasswordChangeAdmin &&
+                ctx.userAditionalInfo.department == "Administración") ||
+                (system.needPasswordChangeTech &&
+                  ctx.userAditionalInfo.department == "Tecnología")) && (
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    <Button
+                      type="submit"
+                      fullWidth
+                      variant="contained"
+                      color="primary"
+                      onClick={async (e) => {
+                        e.preventDefault();
+                        //await axios.post("/admin/generateNewComponent", {id: 7} )
+                        generateNewCode();
+                      }}
+                      className={classes.submit}
+                    >
+                      Generar codigo
+                    </Button>
                   </Grid>
-                  <Grid item xs={12} sm={6} style={{alignSelf:"center"}}>
-                  <TextField
-                    variant="outlined"
-                    required
-                    name="nuevoComponente"
-                    label="codigo"
-                    type="text"
-                    id="admin"
-                    value={newCode}
-                    onChange={(e) => {
-                     // setsystem({ ...system, admin: e.target.value });
-                    }}
-                  />
+                  <Grid item xs={12} sm={6} style={{ alignSelf: "center" }}>
+                    <TextField
+                      variant="outlined"
+                      required
+                      name="nuevoComponente"
+                      label="codigo"
+                      type="text"
+                      id="admin"
+                      value={newCode}
+                      onChange={(e) => {
+                        // setsystem({ ...system, admin: e.target.value });
+                      }}
+                    />
                   </Grid>
-                  </Grid>
-              }      
+                </Grid>
+              )}
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <Button
@@ -409,13 +431,11 @@ export default function SignUp(props) {
                     Cancelar
                   </Button>
                 </Grid>
-                </Grid>
+              </Grid>
 
-                {/* <Grid item xs={12} sm={12}> */}
+              {/* <Grid item xs={12} sm={12}> */}
 
-
-                    {/* </Grid> */}
-              
+              {/* </Grid> */}
 
               <Grid container justify="center"></Grid>
             </form>
