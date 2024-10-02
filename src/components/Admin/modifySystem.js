@@ -349,8 +349,10 @@ export default function SignUp(props) {
                       if (
                         ctx.userAditionalInfo.department == "Administración"
                       ) {
+                        console.log("asd 1");
                         setsystem({ ...system, componente1: e.target.value });
                       } else {
+                        console.log("asd 2");
                         setsystem({ ...system, componente2: e.target.value });
                       }
                     }}

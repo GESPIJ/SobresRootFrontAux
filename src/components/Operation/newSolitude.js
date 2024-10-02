@@ -97,6 +97,7 @@ export default function SignUp() {
     const response = await axios.get("/admin/systemsName");
     // const response = await axios.get("/admin/systemsAll");
     const allSystems = response.data.systems;
+    console.log(response.data);
 
     // const availableSystems = allSystems.filter(
     //   (system) => !busySystems.some((busySystem) => busySystem == system.id)
@@ -105,9 +106,14 @@ export default function SignUp() {
     //A aquellos sistemas que no estan disponibles los deshabiilitamos, y a los que si los dejamos normal. Para ellos vamos sistema por sistema comparando si se encuentran
     // en proceso de solicitud.
     let availableSystems = allSystems.filter((system) => !system.disabled);
+    console.log(availableSystems);
     availableSystems = availableSystems.filter(
       (system) => {
         let result = busySystems.some((busySystem) => busySystem === system.id);
+        if (system.needPasswordChangeAdmin || system.needPasswordChangeTech) {
+          result = true;
+          console.log("AQUI" + system.needPasswordChangeAdmin);
+        }
         system.enabled = result;
         //system.disabled = !result;
 
@@ -234,8 +240,8 @@ export default function SignUp() {
           };
           console.log(propObjects);
 
-          // history.replace({ pathname: "/pageToPDF", state: propObjects });
-        }
+          history.replace({ pathname: "/pageToPDF", state: propObjects });
+        } else console.log(response.data.mensaje);
       }
     } catch (e) {
       console.log(e);

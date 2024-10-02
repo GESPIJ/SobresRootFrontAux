@@ -73,12 +73,12 @@ const Home = (props) => {
   //Function for finishing an active solitude
   const finalizarSolicitud = async (id) => {
     const payload = { id: id };
-
+    console.log(ctx);
     //Server Response
     const response = await axios.post("/admin/finishSolitude", payload);
     //await axios.post("/admin/generateNewComponent", {id: ctx.currentSolitude.SistemaId});
-    await axios.post("/admin/requireSystemNewPassword", {
-      id: ctx.currentSolitude.SistemaId,
+    const response2 = await axios.post("/admin/requireSystemNewPassword", {
+      id: ctx.currentSolitude.id,
     });
     // const notificationResponse = await axios.post("/admin/notifySolitudeByEmail", {
     //   nm: ctx.nmActual,
@@ -86,7 +86,10 @@ const Home = (props) => {
     //   textTitle: `Solicitud de sobre root finalizada para el sistema de nombre ${ctx.currentSolitude.systemName} `
     // });
 
-    if (response.data.message === "success") {
+    if (
+      response.data.message === "success" &&
+      response2.data.message === "success"
+    ) {
       history.replace("/solitudesTable");
     }
   };
