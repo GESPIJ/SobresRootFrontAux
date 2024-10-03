@@ -137,6 +137,7 @@ export default function SignUp(props) {
       admin,
       componente1,
       componente2,
+      department: ctx.userAditionalInfo.department,
     };
 
     //Server Response
