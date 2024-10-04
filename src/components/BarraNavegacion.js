@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
 
   AppBarra: {
     minHeight: "80px",
+    // backgroundColor: "#9f02bb",
   },
   menuButton: {
     marginRight: theme.spacing(2),

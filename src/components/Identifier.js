@@ -152,7 +152,7 @@ export default function SignUp(props) {
               }}
               className={classes.submit}
             >
-              Iniciar sesion
+              Iniciar sesión
             </Button>
           </form>
         </div>
