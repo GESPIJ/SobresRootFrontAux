@@ -114,14 +114,14 @@ export default withRouter(function SignIn({ usuarioActual }) {
           ctx.settimerForJwt(!ctx.timerForJwt);
           const messageText =
             "Usuario logeado " + ctx.usuarioActual + " con exito en local";
-          //We register the corresponding Log
+          //We register the corresponding LogHomeOperations
           await axios.post("/admin/registerLog", {
             solitude: null,
             message: messageText,
           });
 
           ctx.setcurrentJWT(response.data.authorizationCode);
-          // window.localStorage.setItem("code", response.data.authorizationCode);
+          window.localStorage.setItem("code", response.data.authorizationCode);
 
           //La fecha fue modificada para compatibilidad con Mozilla Firefox, ya que Chrome si hace el parse automáticamente.
           let lastPasswordChange = moment(

@@ -51,6 +51,7 @@ const Home = () => {
   const history = useHistory();
   const classes = useStyles();
   const classes2 = useStyles2();
+  debugger;
   return (
     <div className="signup">
       <BarraNavegacion />

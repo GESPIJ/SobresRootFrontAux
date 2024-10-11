@@ -70,7 +70,7 @@ function App() {
     if (!windowAboutToClose.current) {
       windowAboutToClose.current = true;
       await axios.post("/admin/closingTab", {
-        // name: ctx.usuarioActual,
+        name: ctx.usuarioActual,
         nm: ctx.nmActual,
       });
     }
@@ -139,7 +139,7 @@ function App() {
           solitude: null,
         });
         const response = await axios.post("/admin/closingTab", {
-          //name: ctx.usuarioActual,
+          name: ctx.usuarioActual,
           nm: ctx.nmActual,
         });
         window.setTimeout(async () => {
@@ -234,39 +234,39 @@ function App() {
             window.addEventListener("onclick", () => {
               //console.log("Hubo un click");
             });
-            window.addEventListener("beforeunload", (event) => {
-              //setshowConfirmDialog(true);
+            // window.addEventListener("beforeunload", (event) => {
+            //   //setshowConfirmDialog(true);
 
-              // console.log(
-              //   "Es aca donde se imprime el resultado del cuadro de dialogo"
-              // );
-              // const cerrandoTab = async () => {
-              //   if (!windowAboutToClose.current) {
-              //     windowAboutToClose.current = true;
-              //     console.log(
-              //       "Este es el usuario que se esta mandando",
-              //       ctx.usuarioActual
-              //     );
-              //     console.log(ctx);
-              //     const response = await axios.post("/admin/closingTab", {
-              //       name: ctx.usuarioActual,
-              //     });
-              //     console.log(response.data.message);
-              //   }
-              // };
-              ctx.cerrandoTab(windowAboutToClose);
-              event.stopPropagation();
-              event.preventDefault();
-              //event.cancelBubble();
-              //await sleep(1000);
-              cerrandoTab();
+            //   // console.log(
+            //   //   "Es aca donde se imprime el resultado del cuadro de dialogo"
+            //   // );
+            //   // const cerrandoTab = async () => {
+            //   //   if (!windowAboutToClose.current) {
+            //   //     windowAboutToClose.current = true;
+            //   //     console.log(
+            //   //       "Este es el usuario que se esta mandando",
+            //   //       ctx.usuarioActual
+            //   //     );
+            //   //     console.log(ctx);
+            //   //     const response = await axios.post("/admin/closingTab", {
+            //   //       name: ctx.usuarioActual,
+            //   //     });
+            //   //     console.log(response.data.message);
+            //   //   }
+            //   // };
+            //   ctx.cerrandoTab(windowAboutToClose);
+            //   event.stopPropagation();
+            //   event.preventDefault();
+            //   //event.cancelBubble();
+            //   //await sleep(1000);
+            //   cerrandoTab();
 
-              window.setTimeout(() => {
-                //console.log("El usuario al final se quedo");
-                //stayingTab();
-              }, 5000);
-              return (event.returnValue = "");
-            });
+            //   window.setTimeout(() => {
+            //     //console.log("El usuario al final se quedo");
+            //     //stayingTab();
+            //   }, 5000);
+            //   return (event.returnValue = "");
+            // });
 
             // window.addEventListener("onunload", (event) => {
             //   //event.preventDefault();

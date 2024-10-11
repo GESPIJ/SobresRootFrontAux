@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useNavigate } from "react";
 import axios from "axios";
 import { CheckBoxTwoTone } from "@material-ui/icons";
 const MyContext = React.createContext({
@@ -19,6 +19,8 @@ export const MyCustomContext = (props) => {
   const [userAditionalInfo, setuserAditionalInfo] = useState({});
   const [currentJWT, setcurrentJWT] = useState(null);
 
+  const navigate = useNavigate();
+
   const cerrandoTab = async (windowAboutToClose) => {
     if (!windowAboutToClose.current) {
       windowAboutToClose.current = true;
@@ -31,10 +33,19 @@ export const MyCustomContext = (props) => {
 
   const logOut = () => {
     setisLoggedIn(false);
+    navigate("/");
+    sessionStorage.removeItem("token");
   };
   const logIn = () => {
     setisLoggedIn(true);
   };
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      setIsLoggedIn(true);
+      setToken(localStorage.getItem("token"));
+    }
+  }, []);
 
   return (
     <MyContext.Provider
