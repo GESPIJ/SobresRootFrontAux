@@ -18,6 +18,9 @@ export const MyCustomContext = (props) => {
   const [currentSolitude, setcurrentSolitude] = useState({});
   const [userAditionalInfo, setuserAditionalInfo] = useState({});
   const [currentJWT, setcurrentJWT] = useState(null);
+  const [systemsOwned, setSystemsOwned] = useState([]);
+  const [snackbar, setSnackbar] = useState([]); 
+  const [socket, setSocket] = useState(null);
 
   const cerrandoTab = async (windowAboutToClose) => {
     if (!windowAboutToClose.current) {
@@ -72,6 +75,15 @@ export const MyCustomContext = (props) => {
 
         currentJWT: currentJWT,
         setcurrentJWT: setcurrentJWT,
+
+        systemsOwned: systemsOwned,
+        setSystemsOwned: setSystemsOwned,
+
+        socket: socket,
+        setSocket: setSocket,
+
+        snackbar: snackbar,
+        setSnackbar: setSnackbar,
       }}
     >
       {props.children}

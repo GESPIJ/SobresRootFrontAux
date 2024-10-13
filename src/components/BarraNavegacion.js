@@ -7,7 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import MyContext from "../context/mycontext";
 import axios from "axios";
-import socket from "../socket";
+// import socket from "../socket";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -65,7 +65,7 @@ const BarraNavegacion = () => {
                   await cerrandoTab();
 
                   try {
-                    socket.disconnect();
+                    //socket.disconnect();
                     history.replace("/");
                   } catch (err) {}
                 }

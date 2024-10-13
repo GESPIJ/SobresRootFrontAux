@@ -90,8 +90,6 @@ export default withRouter(function SignIn({ usuarioActual }) {
 
         let message = response.data.message;
 
-        debugger;
-
         //If the user is connected from a wrong ip that the previous assigned we display a message
         if (message === "WrongIp") {
           setinvalidCredentials(true);
@@ -306,7 +304,6 @@ export default withRouter(function SignIn({ usuarioActual }) {
   };
 
   const confirmAlertFunction = () => {
-    debugger;
     setAlertMessage({ ...AlertMessage, state: false });
     if (
       AlertMessage.description === "Change_Old_Password" ||

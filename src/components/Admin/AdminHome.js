@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import { Assignment } from "@material-ui/icons";
@@ -9,6 +9,7 @@ import { IconButton, Card, CardHeader } from "@material-ui/core";
 import BarraNavegacion from "../BarraNavegacion";
 import MyContext from "../../context/mycontext";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import  { getSocket }  from "../../socket";
 
 //Component Styles
 const useStyles = makeStyles((theme) => ({
@@ -52,6 +53,14 @@ const Home = () => {
   const history = useHistory();
   const classes = useStyles();
   const classes2 = useStyles2();
+
+
+  useEffect(() => {
+    const socket = getSocket();
+    ctx.setSocket(socket);
+  }, [])
+  
+
   return (
     <div className="signup">
       <BarraNavegacion />

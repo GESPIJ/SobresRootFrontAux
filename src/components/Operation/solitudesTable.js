@@ -24,7 +24,7 @@ import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import InputDialog from "./../FormDialogContentText";
 import { convertDateToHumanReadable } from "../../utils/helper";
 import MyContext from "../../context/mycontext";
-import socket from "../../socket";
+//import socket from "../../socket";
 import axios from "axios";
 
 //Component Styles
@@ -164,6 +164,8 @@ export default function Orders({ solitudes }) {
   };
 
   useEffect(() => {
+    const socket = ctx.socket;
+
     if (solitudes.length > 0) {
       refTimer.current = setTimeout(() => {
         if (true) {

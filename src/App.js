@@ -43,7 +43,7 @@ import moment from "moment";
 //Here we are importing the snackbar
 import { Button, Snackbar } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
-import getSocket from "./socket";
+//import getSocket from "./socket";
 //import { io } from "socket.io-client";
 //import socket from "./socket";
 
@@ -171,59 +171,7 @@ function App() {
     }
   }, [ctx.timerForJwt]);
 
-  let addNewSnackbar = (content, severity) => {
-    setSnackBars((prev) => {
-      return [...prev, { open: true, content: content, severity: severity }];
-    });
-  };
-
-  //This is executed only the first time the component is mounted
-  useEffect(() => {
-    getSocket.on("close", () => {});
-
-    getSocket.on("newRootEnvelope", (parameter) => {
-      let content =
-        "Acaba de ser procesada una nueva solicitud de sobre root por parte del usuario con " +
-        parameter.nm +
-        " para el sistema de nombre " +
-        parameter.system +
-        ". Hora estimada de finalización de la solicitud: " +
-        parameter.expirationTime;
-
-      let severity = "success";
-
-      addNewSnackbar(content, severity);
-    });
-
-    getSocket.on("rootEnvelopeAboutToEnd", (parameter) => {
-      let content =
-        "La solicitud de sobres root activa por el operador " +
-        parameter.nm +
-        " sobre el sistema de nombre " +
-        parameter.system +
-        " esta proxima a terminar. Hora estimada de finalización de la solicitud: " +
-        parameter.expirationTime;
-
-      let severity = "warning";
-
-      addNewSnackbar(content, severity);
-    });
-
-    getSocket.on("rootEnvelopeEnded", (parameter) => {
-      debugger;
-      let content =
-        "La solicitud de sobres root activa por el operador " +
-        parameter.nm +
-        " sobre el sistema de nombre " +
-        parameter.system +
-        " ha finalizado";
-
-      let severity = "error";
-      setsystemIdToRedirect(parameter.systemId);
-      addNewSnackbar(content, severity);
-    });
-  }, []);
-
+  console.log(ctx.snackbar);  
   return (
     <>
       {ctx.usuarioActual !== "" || window.location.pathname === "/" || true ? (
@@ -310,9 +258,8 @@ function App() {
             <BrowserRouter>
               {/* {ctx && ctx.department === "Administración" && newEnvelopeRequest && <Snackbar>>} */}
               {ctx &&
-                snackBars.length > 0 &&
                 ctx.userAditionalInfo.department === "Administración" &&
-                snackBars.map((snackbar, index) => {
+                ctx.snackbar?.map((snackbar, index) => {
                   return (
                     <Snackbar
                       anchorOrigin={{ vertical: "top", horizontal: "center" }}
@@ -324,7 +271,7 @@ function App() {
                       {
                         <Alert
                           onClose={(e) => {
-                            setSnackBars((prev) => {
+                            ctx.setSnackbar((prev) => {
                               let newSnackBarsArray = prev.filter(
                                 (snackbar, ind) => ind !== index
                               );

@@ -11,7 +11,7 @@ import BarraNavegacion from "../BarraNavegacion";
 import MyContext from "../../context/mycontext";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import InputDialog from "./../FormDialogContentText";
-import socket from "../../socket";
+//import socket from "../../socket";
 import moment from "moment";
 //Component Styles
 const useStyles = makeStyles((theme) => ({
@@ -108,6 +108,8 @@ const Home = (props) => {
 
   //Function for updating the timer every 1 second and reflect it on the screen
   useEffect(() => {
+    const socket = ctx.socket;
+
     if (counterTimer < 3600 && !timerAboutToExpire) {
       setshowExtensionButton(true);
       setshowExpiringAlert(true);

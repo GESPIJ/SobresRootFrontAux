@@ -19,9 +19,8 @@ export default function SignUp() {
     //Server Response
     //const response = await axios.get("/admin/systemsAll");
     //console.log(response);
-    debugger;
     let response;
-    if (ctx.userAditionalInfo.department == "Administración") {
+    if (ctx.userAditionalInfo.department === "Administración") {
       response = await axios.post("/admin/getSystemByNMSecurity", {
         id: ctx.userAditionalInfo.id,
       });

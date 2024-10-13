@@ -12,7 +12,7 @@ import Container from "@material-ui/core/Container";
 import MyContext from "../../context/mycontext";
 import { Select, FormControl, InputLabel, MenuItem } from "@material-ui/core";
 import moment from "moment";
-import socket from "../../socket";
+//import socket from "../../socket";
 
 //Import methods and internal project functions
 //For validating the NM
@@ -97,7 +97,6 @@ export default function SignUp() {
     const response = await axios.get("/admin/systemsName");
     // const response = await axios.get("/admin/systemsAll");
     const allSystems = response.data.systems;
-    console.log(response.data);
 
     // const availableSystems = allSystems.filter(
     //   (system) => !busySystems.some((busySystem) => busySystem == system.id)
@@ -106,22 +105,17 @@ export default function SignUp() {
     //A aquellos sistemas que no estan disponibles los deshabiilitamos, y a los que si los dejamos normal. Para ellos vamos sistema por sistema comparando si se encuentran
     // en proceso de solicitud.
     let availableSystems = allSystems.filter((system) => !system.disabled);
-    console.log(availableSystems);
     availableSystems = availableSystems.filter(
       (system) => {
         let result = busySystems.some((busySystem) => busySystem === system.id);
         if (system.needPasswordChangeAdmin || system.needPasswordChangeTech) {
           result = true;
-          console.log("AQUI" + system.needPasswordChangeAdmin);
         }
         system.enabled = result;
         //system.disabled = !result;
 
         return true;
       }
-
-      // console.log(availableSystems);
-      // return system;
     );
 
     //Ordenamos los sistemas, mostrando primero aquellos que estan habilitados para nuevas solicitudes
@@ -131,7 +125,6 @@ export default function SignUp() {
 
   const fetchSelectedSystem = async (systemId) => {
     try {
-      console.log(systemId);
       const response = await axios.post("/admin/getSystemInfo", {
         id: systemId,
       });
@@ -164,7 +157,7 @@ export default function SignUp() {
         usuarioOperaciones: ctx.nmActual,
         sistema: systems.selectedSystem,
       };
-      // console.log(payload);
+
       //Server Response
       // socket.emit("newRootEnvelope", {
       //   nm: ctx.nmActual,
@@ -194,6 +187,9 @@ export default function SignUp() {
 
           //socket.emit("newRootEnvelope", { nm: ctx.nmActual });
 
+          const socket = ctx.socket;
+
+          console.log("A punto de emitir socket por solicitud de sobre root", socket);
           socket.emit("newRootEnvelope", {
             nm: ctx.nmActual,
             system: systems.selectedSystem,
@@ -223,11 +219,9 @@ export default function SignUp() {
             (sys) => sys.name === systems.selectedSystem
           );
 
-          console.log(systemSelected);
 
           let systemInfo = await fetchSelectedSystem(systemSelected.id);
           systemInfo = systemInfo.data.systems[0];
-          console.log(systemInfo.ip);
           const propObjects = {
             date: new Date().toDateString(),
             //name: response.data.systemName,
@@ -238,10 +232,9 @@ export default function SignUp() {
             password: systemInfo.password,
             operator: ctx.usuarioActual,
           };
-          console.log(propObjects);
 
           history.replace({ pathname: "/pageToPDF", state: propObjects });
-        } else console.log(response.data.mensaje);
+        } 
       }
     } catch (e) {
       console.log(e);
