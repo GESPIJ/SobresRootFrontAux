@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useNavigate } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 import { CheckBoxTwoTone } from "@material-ui/icons";
 const MyContext = React.createContext({
-  usuarioActual: "Greg",
-  cambiarNumero: () => {},
+  // usuarioActual: "Greg",
+  // cambiarNumero: () => {},
 });
 
 export const MyCustomContext = (props) => {
@@ -17,9 +18,10 @@ export const MyCustomContext = (props) => {
   const [timerForJwt, settimerForJwt] = useState(false);
   const [currentSolitude, setcurrentSolitude] = useState({});
   const [userAditionalInfo, setuserAditionalInfo] = useState({});
+  const [token, setToken] = useState("");
   const [currentJWT, setcurrentJWT] = useState(null);
 
-  const navigate = useNavigate();
+  const history = useHistory();
 
   const cerrandoTab = async (windowAboutToClose) => {
     if (!windowAboutToClose.current) {
@@ -33,7 +35,8 @@ export const MyCustomContext = (props) => {
 
   const logOut = () => {
     setisLoggedIn(false);
-    navigate("/");
+    setisSuccesfullyLogged(false);
+    // history.replace("/");
     sessionStorage.removeItem("token");
   };
   const logIn = () => {
@@ -42,8 +45,9 @@ export const MyCustomContext = (props) => {
 
   useEffect(() => {
     if (localStorage.getItem("token")) {
-      setIsLoggedIn(true);
-      setToken(localStorage.getItem("token"));
+      setisLoggedIn(true);
+      setisSuccesfullyLogged(true);
+      setcurrentJWT(localStorage.getItem("token"));
     }
   }, []);
 
@@ -68,6 +72,10 @@ export const MyCustomContext = (props) => {
         userStatus: userStatus,
         setUserStatus: setUserStatus,
         isLoggedIn: isLoggedIn,
+        setisLoggedIn: setisLoggedIn,
+
+        token: token,
+        setToken: setToken,
 
         isSuccesfullyLogged: isSuccesfullyLogged,
         setisSuccesfullyLogged: setisSuccesfullyLogged,

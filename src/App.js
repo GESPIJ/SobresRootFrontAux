@@ -85,6 +85,44 @@ function App() {
     }
   };
 
+  const fetchUser = async () => {
+    const jwtToken = localStorage.getItem("code");
+    const userId = localStorage.getItem("userId");
+    try {
+      const response = await axios.post("/admin/getUserInfoToken", {
+        jwtToken: jwtToken,
+        userId: userId,
+      });
+      const user = response.data.user;
+      const message = response.data.message;
+      console.log(response.data);
+
+      const additionalInfo = {
+        authorizationCode: user.lastJWT,
+        department: user.department,
+        id: user.id,
+        lastUpdatedPassword: user.lastUpdatedPassword,
+        message: message,
+      };
+      console.log(user.name);
+      ctx.setusuarioActual(user.name);
+      ctx.setnmActual(user.nm);
+      ctx.setFailedAttemps(user.failedAttemps);
+      ctx.setUserStatus(user.status);
+      ctx.setuserAditionalInfo({ ...additionalInfo });
+      ctx.settimerForJwt(!ctx.timerForJwt);
+    } catch (err) {
+      ctx.logOut();
+    }
+  };
+
+  useEffect(() => {
+    debugger;
+    if (localStorage.getItem("code")) {
+      fetchUser();
+    }
+  }, []);
+
   function sleep(ms) {
     return new Promise((resolve) => window.setTimeout(resolve, ms));
   }
@@ -120,45 +158,45 @@ function App() {
     });
   };
 
-  useEffect(() => {
-    if (clickOnStay) {
-      //cerrandoTab();
-      //setclickOnStay(false);
-    } else {
-    }
-    window.onbeforeunload = async () => {
-      if (!windowAboutToClose.current) {
-        windowAboutToClose.current = true;
+  // useEffect(() => {
+  //   if (clickOnStay) {
+  //     //cerrandoTab();
+  //     //setclickOnStay(false);
+  //   } else {
+  //   }
+  //   window.onbeforeunload = async () => {
+  //     if (!windowAboutToClose.current) {
+  //       windowAboutToClose.current = true;
 
-        const messageText =
-          "Intento de deslogeo por parte del usuario " +
-          ctx.usuarioActual +
-          ", trato de cerrar la pantalla";
-        await axios.post("/admin/registerLog", {
-          message: messageText,
-          solitude: null,
-        });
-        const response = await axios.post("/admin/closingTab", {
-          name: ctx.usuarioActual,
-          nm: ctx.nmActual,
-        });
-        window.setTimeout(async () => {
-          const actualJWT = window.localStorage.getItem("code");
-          const response = await axios.post("/admin/stayingTab", {
-            //name: ctx.usuarioActual,
-            nm: ctx.nmActual,
-            lastJWT: actualJWT,
-          });
-          const messageText =
-            "El usuario " + ctx.usuarioActual + " se quedo en la pantalla";
-          await axios.post("/admin/registerLog", {
-            message: messageText,
-            solitude: null,
-          });
-        }, 4000);
-      }
-    };
-  }, [ctx.usuarioActual]);
+  //       const messageText =
+  //         "Intento de deslogeo por parte del usuario " +
+  //         ctx.usuarioActual +
+  //         ", trato de cerrar la pantalla";
+  //       await axios.post("/admin/registerLog", {
+  //         message: messageText,
+  //         solitude: null,
+  //       });
+  //       const response = await axios.post("/admin/closingTab", {
+  //         name: ctx.usuarioActual,
+  //         nm: ctx.nmActual,
+  //       });
+  //       window.setTimeout(async () => {
+  //         const actualJWT = window.localStorage.getItem("code");
+  //         const response = await axios.post("/admin/stayingTab", {
+  //           //name: ctx.usuarioActual,
+  //           nm: ctx.nmActual,
+  //           lastJWT: actualJWT,
+  //         });
+  //         const messageText =
+  //           "El usuario " + ctx.usuarioActual + " se quedo en la pantalla";
+  //         await axios.post("/admin/registerLog", {
+  //           message: messageText,
+  //           solitude: null,
+  //         });
+  //       }, 4000);
+  //     }
+  //   };
+  // }, [ctx.usuarioActual]);
 
   useEffect(() => {
     if (firstTimeTimerToken.current) {
@@ -476,5 +514,4 @@ function App() {
     </>
   );
 }
-
 export default App;

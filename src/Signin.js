@@ -89,6 +89,7 @@ export default withRouter(function SignIn({ usuarioActual }) {
         });
 
         let message = response.data.message;
+        console.log(response.data);
 
         debugger;
 
@@ -122,7 +123,7 @@ export default withRouter(function SignIn({ usuarioActual }) {
 
           ctx.setcurrentJWT(response.data.authorizationCode);
           window.localStorage.setItem("code", response.data.authorizationCode);
-
+          window.localStorage.setItem("userId", response.data.id);
           //La fecha fue modificada para compatibilidad con Mozilla Firefox, ya que Chrome si hace el parse automáticamente.
           let lastPasswordChange = moment(
             response.data.lastUpdatedPassword,
