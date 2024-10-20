@@ -48,10 +48,6 @@ const BarraNavegacion = () => {
             <Button
               onClick={async () => {
                 if (ctx.isSuccesfullyLogged) {
-                  await axios.post("/admin/updateJWToken", {
-                    name: ctx.usuarioActual,
-                    code: "123",
-                  });
                   const messageText =
                     "Usuario " +
                     ctx.usuarioActual +
@@ -63,10 +59,15 @@ const BarraNavegacion = () => {
                     solitude: null,
                   });
                   await cerrandoTab();
+                  await axios.post("/admin/updateJWToken", {
+                    name: ctx.usuarioActual,
+                    code: "123",
+                  }); 
 
                   try {
                     //socket.disconnect();
-                    history.replace("/");
+                    window.location.href = "/";
+                    //history.replace("/");
                   } catch (err) {}
                 }
 

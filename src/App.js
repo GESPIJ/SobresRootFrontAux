@@ -36,6 +36,7 @@ import HojaSistemasImprimir from "./components/HojaImprimirSistemas";
 import FormularioMediosMagneticos from "./components/FormularioMediosMagneticos";
 import FormularioMediosNoMagneticos from "./components/FormularioMediosNoMagneticos";
 import axios from "axios";
+import axiosIntance from "./axios/axios"
 import ConfirmDialog from "./components/Dialogs/ConfirmDialog";
 import Wraper from "./wraper";
 import moment from "moment";
@@ -89,27 +90,28 @@ function App() {
     return new Promise((resolve) => window.setTimeout(resolve, ms));
   }
 
-  const registerNewToken = async () => {
-    const response = await axios.get("/admin/generateNewToken");
+  // const registerNewToken = async () => {
+  //   console.log("This is the ctx usuario actual", ctx.usuarioActual);
+  //   const response = await axios.get(`/admin/generateNewToken?name=${ctx}`);
 
-    ctx.setcurrentJWT(response.data.message);
+  //   ctx.setcurrentJWT(response.data.message);
 
-    //window.localStorage.setItem("code", response.data.message);
+  //   //window.localStorage.setItem("code", response.data.message);
 
-    await axios.post("/admin/updateJWToken", {
-      name: ctx.usuarioActual,
-      code: response.data.message,
-    });
+  //   await axios.post("/admin/updateJWToken", {
+  //     name: ctx.usuarioActual,
+  //     code: response.data.message,
+  //   });
 
-    const messageText =
-      "El usuario " + ctx.usuarioActual + " registro un nuevo token";
-    await axios.post("/admin/registerLog", {
-      message: messageText,
-      solitude: null,
-    });
+  //   const messageText =
+  //     "El usuario " + ctx.usuarioActual + " registro un nuevo token";
+  //   await axios.post("/admin/registerLog", {
+  //     message: messageText,
+  //     solitude: null,
+  //   });
 
-    ctx.settimerForJwt((prev) => !prev);
-  };
+  //   ctx.settimerForJwt((prev) => !prev);
+  // };
 
   const displaySnackbar = (severity, content) => {
     setSnackBars({
@@ -160,87 +162,107 @@ function App() {
     };
   }, [ctx.usuarioActual]);
 
-  useEffect(() => {
-    if (firstTimeTimerToken.current) {
-      setTimeout(async () => {
-        await registerNewToken();
-      }, 120000);
-    } else {
-      firstTimeTimerToken.current = true;
-      registerNewToken();
-    }
-  }, [ctx.timerForJwt]);
+  // useEffect(() => {
+  //   if (firstTimeTimerToken.current) {
+  //     setTimeout(async () => {
+  //       await registerNewToken();
+  //     }, 120000);
+  //   } else {
+  //     firstTimeTimerToken.current = true;
+  //     registerNewToken();
+  //   }
+  // }, [ctx.timerForJwt]);
 
-  console.log(ctx.snackbar);  
+  // console.log(ctx.snackbar);  
+  // console.log("Este es el usuario actual", ctx);
+
+  const getUserInfoByToken = async () => {
+    const userInfo = await axiosIntance.post("/admin/getUserInfoToken");
+    ctx.setusuarioActual(userInfo.data.user.name);
+    ctx.setnmActual(userInfo.data.user.nm);
+    ctx.setuserAditionalInfo({ ...userInfo.data.user });
+    // ctx.usuarioActual = userInfo.data.user.name;
+    // ctx.nmActual = userInfo.data.user.nm;
+    // ctx.userAditionalInfo = {...userInfo.data.user};
+  }
+
+  useEffect(() => {
+    //const jwtToken = window.localStorage.getItem("jwtToken"); 
+    console.log("This is the current location", window.location.href);
+    if(!ctx.usuarioActual && window.location.pathname !== "/") getUserInfoByToken();
+  }, [])
+  
+
+
   return (
     <>
       {ctx.usuarioActual !== "" || window.location.pathname === "/" || true ? (
         <div
           className="App"
-          onLoad={() => {
-            const body = document.body;
-            window.addEventListener("onclick", () => {
-              //console.log("Hubo un click");
-            });
-            window.addEventListener("beforeunload", (event) => {
-              //setshowConfirmDialog(true);
+          // onLoad={() => {
+          //   const body = document.body;
+          //   window.addEventListener("onclick", () => {
+          //     //console.log("Hubo un click");
+          //   });
+          //   window.addEventListener("beforeunload", (event) => {
+          //     //setshowConfirmDialog(true);
 
-              // console.log(
-              //   "Es aca donde se imprime el resultado del cuadro de dialogo"
-              // );
-              // const cerrandoTab = async () => {
-              //   if (!windowAboutToClose.current) {
-              //     windowAboutToClose.current = true;
-              //     console.log(
-              //       "Este es el usuario que se esta mandando",
-              //       ctx.usuarioActual
-              //     );
-              //     console.log(ctx);
-              //     const response = await axios.post("/admin/closingTab", {
-              //       name: ctx.usuarioActual,
-              //     });
-              //     console.log(response.data.message);
-              //   }
-              // };
-              ctx.cerrandoTab(windowAboutToClose);
-              event.stopPropagation();
-              event.preventDefault();
-              //event.cancelBubble();
-              //await sleep(1000);
-              cerrandoTab();
+          //     // console.log(
+          //     //   "Es aca donde se imprime el resultado del cuadro de dialogo"
+          //     // );
+          //     // const cerrandoTab = async () => {
+          //     //   if (!windowAboutToClose.current) {
+          //     //     windowAboutToClose.current = true;
+          //     //     console.log(
+          //     //       "Este es el usuario que se esta mandando",
+          //     //       ctx.usuarioActual
+          //     //     );
+          //     //     console.log(ctx);
+          //     //     const response = await axios.post("/admin/closingTab", {
+          //     //       name: ctx.usuarioActual,
+          //     //     });
+          //     //     console.log(response.data.message);
+          //     //   }
+          //     // };
+          //     ctx.cerrandoTab(windowAboutToClose);
+          //     event.stopPropagation();
+          //     event.preventDefault();
+          //     //event.cancelBubble();
+          //     //await sleep(1000);
+          //     cerrandoTab();
 
-              window.setTimeout(() => {
-                //console.log("El usuario al final se quedo");
-                //stayingTab();
-              }, 5000);
-              return (event.returnValue = "");
-            });
+          //     window.setTimeout(() => {
+          //       //console.log("El usuario al final se quedo");
+          //       //stayingTab();
+          //     }, 5000);
+          //     return (event.returnValue = "");
+          //   });
 
-            // window.addEventListener("onunload", (event) => {
-            //   //event.preventDefault();
-            //   window.alert("Nooooooooooooo");
-            //   //cerrandoTab();
-            //   //return (event.returnValue = "Are you sure you want to exit?");
-            // });
+          //   // window.addEventListener("onunload", (event) => {
+          //   //   //event.preventDefault();
+          //   //   window.alert("Nooooooooooooo");
+          //   //   //cerrandoTab();
+          //   //   //return (event.returnValue = "Are you sure you want to exit?");
+          //   // });
 
-            window.history.pushState(
-              null,
-              document.title,
-              window.location.href
-            );
-            window.addEventListener("popstate", function (event) {
-              window.history.pushState(
-                null,
-                document.title,
-                window.location.href
-              );
-            });
+          //   window.history.pushState(
+          //     null,
+          //     document.title,
+          //     window.location.href
+          //   );
+          //   window.addEventListener("popstate", function (event) {
+          //     window.history.pushState(
+          //       null,
+          //       document.title,
+          //       window.location.href
+          //     );
+          //   });
 
-            window.addEventListener("focus", (event) => {
-              windowAboutToClose.current = false;
-              windowAboutToStay.current = false;
-            });
-          }}
+          //   window.addEventListener("focus", (event) => {
+          //     windowAboutToClose.current = false;
+          //     windowAboutToStay.current = false;
+          //   });
+          // }}
         >
           {showConfirmDialog && (
             <ConfirmDialog

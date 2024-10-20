@@ -12,7 +12,8 @@ import BarraNavegacion from "../BarraNavegacion";
 import MyContext from "../../context/mycontext";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { getSocket, buildSocketMessage } from "../../socket";
-const axios = require("axios");
+//const axios = require("axios");
+import axios from "../../axios/axios";
 
 const useStyles2 = makeStyles({
   card: {
@@ -34,13 +35,13 @@ const Home = () => {
       response = await axios.post("/admin/getSystemByNMSecurity", {
         id: ctx.userAditionalInfo.id,
       });
-    } else {
+    } else if (ctx.userAditionalInfo.department === "Tecnología") {
       response = await axios.post("/admin/getSystemByNMTecnologie", {
         id: ctx.userAditionalInfo.id,
       });
     }
 
-    ctx.setSystemsOwned(response.data.systems.reverse());
+    if(response?.data?.systems) ctx.setSystemsOwned(response.data.systems.reverse());
   };
 
   let addNewSnackbar = (content, severity, parameter) => {
@@ -55,6 +56,7 @@ const Home = () => {
   };
 
     useEffect(() => {
+      //Sockets logic
       const socket = getSocket();
       socket.on("close", () => {});
   
@@ -72,8 +74,11 @@ const Home = () => {
     }, [ ]);
 
   useEffect(() => {
+    //Fetching systems associated with the user
     fetchSystems();
     }, [ctx.usuarioActual]);
+
+  console.log("This is the user", ctx)
 
   return (
     <div className="signup">

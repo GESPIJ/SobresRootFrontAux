@@ -89,6 +89,8 @@ export default withRouter(function SignIn({ usuarioActual }) {
         });
 
         let message = response.data.message;
+        let authorizationCode = response.data.authorizationCode;  
+        if(authorizationCode) window.localStorage.setItem("jwtToken", authorizationCode);
 
         //If the user is connected from a wrong ip that the previous assigned we display a message
         if (message === "WrongIp") {
