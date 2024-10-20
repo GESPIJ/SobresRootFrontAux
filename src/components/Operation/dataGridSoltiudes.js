@@ -1,5 +1,5 @@
 import * as React from "react";
-import axios from "axios";
+import axios from "../../axios/axios";
 import { DataGrid } from "@mui/x-data-grid";
 
 const columns = [

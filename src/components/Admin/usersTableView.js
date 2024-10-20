@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import axios from "axios";
+import axios from "../../axios/axios";
 import Orders from "./usersTable";
 import { Backdrop, CircularProgress } from "@material-ui/core";
 //Internal Components

@@ -7,6 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import MyContext from "../context/mycontext";
 import axios from "axios";
+import axiosInstance from "../axios/axios";
 // import socket from "../socket";
 
 const useStyles = makeStyles((theme) => ({
@@ -32,7 +33,7 @@ const BarraNavegacion = () => {
   const ctx = useContext(MyContext);
 
   const cerrandoTab = async () => {
-    const response = await axios.post("/admin/closingTab", {
+    const response = await axiosInstance.post("/admin/closingTab", {
       name: ctx.usuarioActual,
       nm: ctx.nmActual,
     });
@@ -54,14 +55,14 @@ const BarraNavegacion = () => {
                     " con nm " +
                     ctx.nmActual +
                     " deslogeado con exito";
-                  await axios.post("/admin/registerLog", {
+                  await axiosInstance.post("/admin/registerLog", {
                     message: messageText,
                     solitude: null,
                   });
                   await cerrandoTab();
-                  await axios.post("/admin/updateJWToken", {
+                  await axiosInstance.post("/admin/updateJWToken", {
                     name: ctx.usuarioActual,
-                    code: "123",
+                    code: null,
                   }); 
 
                   try {

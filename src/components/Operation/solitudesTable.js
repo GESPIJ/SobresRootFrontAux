@@ -25,7 +25,7 @@ import InputDialog from "./../FormDialogContentText";
 import { convertDateToHumanReadable } from "../../utils/helper";
 import MyContext from "../../context/mycontext";
 //import socket from "../../socket";
-import axios from "axios";
+import axios from "../../axios/axios";
 
 //Component Styles
 const useStyles = makeStyles((theme) => ({

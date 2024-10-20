@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
-import axios from "axios";
+import axios from "../../axios/axios";
 // import { Link, Grid, Backdrop, CircularProgress } from "@material-ui/core";
 import Orders from "./solitudesTable";
 import MyContext from "../../context/mycontext";

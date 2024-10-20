@@ -1,5 +1,5 @@
 import MaterialTable from "material-table";
-import axios from "axios";
+import axios from "../../axios/axios";
 import Button from "@material-ui/core/Button";
 import React, { useEffect, useState, useContext } from "react";
 import { useHistory } from "react-router-dom";

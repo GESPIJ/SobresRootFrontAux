@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "../../axios/axios";
 import Orders from "./printersTable";
 import BarraNavegacion from "../BarraNavegacion";
 import CssBaseline from "@material-ui/core/CssBaseline";
