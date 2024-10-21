@@ -57,7 +57,7 @@ export default function SignUp(props) {
   const classes = useStyles();
   const history = useHistory();
 
-  window.localStorage.setItem("code", response.data.authorizationCode);
+  // window.localStorage.setItem("code", response.data.authorizationCode);
 
   //Component States
   const [user, setuser] = useState({
