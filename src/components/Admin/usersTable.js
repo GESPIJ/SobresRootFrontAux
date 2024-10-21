@@ -194,6 +194,10 @@ export default function Orders({ solitudes, fetchSolitudes }) {
                                 user: solitude,
                               },
                             });
+                            window.localStorage.setItem(
+                              "modifyUserId",
+                              solitude.id
+                            );
                           }}
                         >
                           {" "}

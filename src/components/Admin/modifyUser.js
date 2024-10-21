@@ -57,6 +57,8 @@ export default function SignUp(props) {
   const classes = useStyles();
   const history = useHistory();
 
+  window.localStorage.setItem("code", response.data.authorizationCode);
+
   //Component States
   const [user, setuser] = useState({
     ...props.location.state.user,
@@ -323,7 +325,11 @@ export default function SignUp(props) {
                   color="primary"
                   onClick={(e) => {
                     e.preventDefault();
-                    history.replace(ctx.previousPage);
+                    if (ctx.previousPage) {
+                      history.replace(ctx.previousPage);
+                    } else {
+                      history.replace("/HomeOperations");
+                    }
                   }}
                   className={classes.submit}
                 >

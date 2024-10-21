@@ -117,7 +117,6 @@ function App() {
   };
 
   useEffect(() => {
-    debugger;
     if (localStorage.getItem("code")) {
       fetchUser();
     }

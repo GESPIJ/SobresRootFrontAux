@@ -17,6 +17,7 @@ export default function SignUp() {
   //Function for fetching all the systems from the DB
   const fetchSystems = async () => {
     console.log(ctx);
+
     //Server Response
     //const response = await axios.get("/admin/systemsAll");
     //console.log(response);
@@ -37,9 +38,11 @@ export default function SignUp() {
   };
 
   useEffect(() => {
-    fetchSystems();
-    return () => {};
-  }, []);
+    if (ctx.userAditionalInfo.id) {
+      fetchSystems();
+      return () => {};
+    }
+  }, [ctx.userAditionalInfo.id]);
 
   return (
     <div className="signup">
