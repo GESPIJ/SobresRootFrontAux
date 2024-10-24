@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+// import axios from "axios";
+import axios from "../axios/axios";
 import { CheckBoxTwoTone } from "@material-ui/icons";
 const MyContext = React.createContext({
   usuarioActual: "Greg",
@@ -19,7 +20,7 @@ export const MyCustomContext = (props) => {
   const [userAditionalInfo, setuserAditionalInfo] = useState({});
   const [currentJWT, setcurrentJWT] = useState(null);
   const [systemsOwned, setSystemsOwned] = useState([]);
-  const [snackbar, setSnackbar] = useState([]); 
+  const [snackbar, setSnackbar] = useState([]);
   const [socket, setSocket] = useState(null);
 
   const cerrandoTab = async (windowAboutToClose) => {
@@ -34,6 +35,15 @@ export const MyCustomContext = (props) => {
 
   const logOut = () => {
     setisLoggedIn(false);
+    setusuarioActual(false);
+    setnmActual(false);
+    setisSuccesfullyLogged(false);
+    setpreviousPage(null);
+    settimerForJwt(false);
+    setcurrentJWT(null);
+    localStorage.removeItem("code");
+    localStorage.removeItem("jwtToken");
+    localStorage.removeItem("userId");
   };
   const logIn = () => {
     setisLoggedIn(true);

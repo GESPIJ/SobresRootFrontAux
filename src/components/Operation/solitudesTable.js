@@ -387,7 +387,6 @@ export default function Orders({ solitudes }) {
                                 });
                                 history.replace({
                                   pathname: "/timeoutcounter",
-
                                   state: {
                                     id: solitude.id,
                                     timeLeft: solitude.timeLeft,

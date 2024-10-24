@@ -49,21 +49,22 @@ const BarraNavegacion = () => {
             <Button
               onClick={async () => {
                 if (ctx.isSuccesfullyLogged) {
-                  const messageText =
-                    "Usuario " +
-                    ctx.usuarioActual +
-                    " con nm " +
-                    ctx.nmActual +
-                    " deslogeado con exito";
+                  // const messageText =
+                  //   "Usuario " +
+                  //   ctx.usuarioActual +
+                  //   " con nm " +
+                  //   ctx.nmActual +
+                  //   " deslogeado con exito";
                   await axiosInstance.post("/admin/registerLog", {
-                    message: messageText,
+                    message: "Usuario deslogeado con exito",
                     solitude: null,
                   });
                   await cerrandoTab();
                   await axiosInstance.post("/admin/updateJWToken", {
                     name: ctx.usuarioActual,
                     code: null,
-                  }); 
+                  });
+                  ctx.logOut();
 
                   try {
                     //socket.disconnect();

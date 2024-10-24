@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useHistory, withRouter } from "react-router-dom";
-import axios from "axios";
+import axios from "./axios/axios";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -89,8 +89,9 @@ export default withRouter(function SignIn({ usuarioActual }) {
         });
 
         let message = response.data.message;
-        let authorizationCode = response.data.authorizationCode;  
-        if(authorizationCode) window.localStorage.setItem("jwtToken", authorizationCode);
+        let authorizationCode = response.data.authorizationCode;
+        if (authorizationCode)
+          window.localStorage.setItem("jwtToken", authorizationCode);
 
         //If the user is connected from a wrong ip that the previous assigned we display a message
         if (message === "WrongIp") {

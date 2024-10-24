@@ -36,7 +36,7 @@ import HojaSistemasImprimir from "./components/HojaImprimirSistemas";
 import FormularioMediosMagneticos from "./components/FormularioMediosMagneticos";
 import FormularioMediosNoMagneticos from "./components/FormularioMediosNoMagneticos";
 import axios from "axios";
-import axiosIntance from "./axios/axios"
+import axiosInstance from "./axios/axios";
 import ConfirmDialog from "./components/Dialogs/ConfirmDialog";
 import Wraper from "./wraper";
 import moment from "moment";
@@ -70,7 +70,7 @@ function App() {
   const cerrandoTab = async () => {
     if (!windowAboutToClose.current) {
       windowAboutToClose.current = true;
-      await axios.post("/admin/closingTab", {
+      await axiosInstance.post("/admin/closingTab", {
         // name: ctx.usuarioActual,
         nm: ctx.nmActual,
       });
@@ -80,7 +80,7 @@ function App() {
   const stayingTab = async () => {
     if (!windowAboutToStay.current) {
       windowAboutToStay.current = true;
-      const response = await axios.post("/admin/stayingTab", {
+      const response = await axiosInstance.post("/admin/stayingTab", {
         name: ctx.usuarioActual,
       });
     }
@@ -136,24 +136,24 @@ function App() {
           "Intento de deslogeo por parte del usuario " +
           ctx.usuarioActual +
           ", trato de cerrar la pantalla";
-        await axios.post("/admin/registerLog", {
+        await axiosInstance.post("/admin/registerLog", {
           message: messageText,
           solitude: null,
         });
-        const response = await axios.post("/admin/closingTab", {
+        const response = await axiosInstance.post("/admin/closingTab", {
           //name: ctx.usuarioActual,
           nm: ctx.nmActual,
         });
         window.setTimeout(async () => {
           const actualJWT = window.localStorage.getItem("code");
-          const response = await axios.post("/admin/stayingTab", {
+          const response = await axiosInstance.post("/admin/stayingTab", {
             //name: ctx.usuarioActual,
             nm: ctx.nmActual,
             lastJWT: actualJWT,
           });
           const messageText =
             "El usuario " + ctx.usuarioActual + " se quedo en la pantalla";
-          await axios.post("/admin/registerLog", {
+          await axiosInstance.post("/admin/registerLog", {
             message: messageText,
             solitude: null,
           });
@@ -173,26 +173,25 @@ function App() {
   //   }
   // }, [ctx.timerForJwt]);
 
-  // console.log(ctx.snackbar);  
+  // console.log(ctx.snackbar);
   // console.log("Este es el usuario actual", ctx);
 
   const getUserInfoByToken = async () => {
-    const userInfo = await axiosIntance.post("/admin/getUserInfoToken");
+    const userInfo = await axiosInstance.post("/admin/getUserInfoToken");
     ctx.setusuarioActual(userInfo.data.user.name);
     ctx.setnmActual(userInfo.data.user.nm);
     ctx.setuserAditionalInfo({ ...userInfo.data.user });
     // ctx.usuarioActual = userInfo.data.user.name;
     // ctx.nmActual = userInfo.data.user.nm;
     // ctx.userAditionalInfo = {...userInfo.data.user};
-  }
+  };
 
   useEffect(() => {
-    //const jwtToken = window.localStorage.getItem("jwtToken"); 
+    //const jwtToken = window.localStorage.getItem("jwtToken");
     console.log("This is the current location", window.location.href);
-    if(!ctx.usuarioActual && window.location.pathname !== "/") getUserInfoByToken();
-  }, [])
-  
-
+    if (!ctx.usuarioActual && window.location.pathname !== "/")
+      getUserInfoByToken();
+  }, []);
 
   return (
     <>

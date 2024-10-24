@@ -105,18 +105,16 @@ export default function SignUp() {
     //A aquellos sistemas que no estan disponibles los deshabiilitamos, y a los que si los dejamos normal. Para ellos vamos sistema por sistema comparando si se encuentran
     // en proceso de solicitud.
     let availableSystems = allSystems.filter((system) => !system.disabled);
-    availableSystems = availableSystems.filter(
-      (system) => {
-        let result = busySystems.some((busySystem) => busySystem === system.id);
-        if (system.needPasswordChangeAdmin || system.needPasswordChangeTech) {
-          result = true;
-        }
-        system.enabled = result;
-        //system.disabled = !result;
-
-        return true;
+    availableSystems = availableSystems.filter((system) => {
+      let result = busySystems.some((busySystem) => busySystem === system.id);
+      if (system.needPasswordChangeAdmin || system.needPasswordChangeTech) {
+        result = true;
       }
-    );
+      system.enabled = result;
+      //system.disabled = !result;
+
+      return true;
+    });
 
     //Ordenamos los sistemas, mostrando primero aquellos que estan habilitados para nuevas solicitudes
     availableSystems.sort((a, b) => (a.enabled > b.enabled ? 1 : -1));
@@ -152,8 +150,9 @@ export default function SignUp() {
   const registerSolitude = async ({ nm, motivo }) => {
     try {
       const payload = {
-        nm,
+        nmSolicitante: nm,
         motivo,
+        nm: ctx.nmActual,
         usuarioOperaciones: ctx.nmActual,
         sistema: systems.selectedSystem,
       };
@@ -164,6 +163,7 @@ export default function SignUp() {
       //   system: systems.selectedSystem,
       //   expirationTime: moment().add(8, "hours").format("HH:mm"),
       // });
+      debugger;
 
       if (validData.nm) {
         const response = await axios.post("/admin/registerSolitude", payload);
@@ -189,7 +189,10 @@ export default function SignUp() {
 
           const socket = ctx.socket;
 
-          console.log("A punto de emitir socket por solicitud de sobre root", socket);
+          console.log(
+            "A punto de emitir socket por solicitud de sobre root",
+            socket
+          );
           socket.emit("newRootEnvelope", {
             nm: ctx.nmActual,
             system: systems.selectedSystem,
@@ -219,7 +222,6 @@ export default function SignUp() {
             (sys) => sys.name === systems.selectedSystem
           );
 
-
           let systemInfo = await fetchSelectedSystem(systemSelected.id);
           systemInfo = systemInfo.data.systems[0];
           const propObjects = {
@@ -234,7 +236,7 @@ export default function SignUp() {
           };
 
           history.replace({ pathname: "/pageToPDF", state: propObjects });
-        } 
+        }
       }
     } catch (e) {
       console.log(e);
@@ -368,7 +370,11 @@ export default function SignUp() {
                   color="primary"
                   onClick={(e) => {
                     e.preventDefault();
-                    history.replace(ctx.previousPage);
+                    if (ctx.previousPage) {
+                      history.replace(ctx.previousPage);
+                    } else {
+                      history.replace("/solitudesTable");
+                    }
                   }}
                   className={classes.submit}
                 >

@@ -128,6 +128,9 @@ export default function SignUp(props) {
     componente1,
     componente2,
   }) => {
+    console.log(password);
+    console.log(componente1);
+    console.log(componente2);
     const payload = {
       id,
       name,
@@ -160,19 +163,20 @@ export default function SignUp(props) {
     setnewCode(response.data.code);
   };
 
+  let fetchData = async () => {
+    let response = await axios.post("/admin/getIndividualSystem", {
+      id: systemId,
+    });
+
+    if (response.data.message === "succesfull") {
+      setloading(false);
+      setsystem(response.data.system);
+    }
+  };
+
   useEffect(() => {
     if (!system) {
       //We fetch the system in
-      let fetchData = async () => {
-        let response = await axios.post("/admin/getIndividualSystem", {
-          id: systemId,
-        });
-
-        if (response.data.message === "succesfull") {
-          setloading(false);
-          setsystem(response.data.system);
-        }
-      };
 
       fetchData();
     }

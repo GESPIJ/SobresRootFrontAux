@@ -36,9 +36,11 @@ export default function SignUp() {
   };
 
   useEffect(() => {
-    fetchSystems();
-    return () => {};
-  }, []);
+    if (ctx.userAditionalInfo.id) {
+      fetchSystems();
+      return () => {};
+    }
+  }, [ctx.userAditionalInfo]);
 
   return (
     <div className="signup">

@@ -18,6 +18,7 @@ export default function SignUp() {
 
   const fetchSystems = async () => {
     const payload = { nm: ctx.nmActual };
+    console.log(payload);
 
     //Server Response
     const response = await axios.post("/operation/solitudesAll", payload);
@@ -31,9 +32,11 @@ export default function SignUp() {
 
   //We fetch all the solitudes once the component is mounted
   useEffect(() => {
-    fetchSystems();
-    return () => {};
-  }, []);
+    if (ctx.nmActual) {
+      fetchSystems();
+      return () => {};
+    }
+  }, [ctx.nmActual]);
 
   //JSX Component
   return (

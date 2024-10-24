@@ -404,7 +404,11 @@ export default function SignUp() {
                   color="primary"
                   onClick={(e) => {
                     e.preventDefault();
-                    history.replace(ctx.previousPage);
+                    if (ctx.previousPage) {
+                      history.replace(ctx.previousPage);
+                    } else {
+                      history.replace("/usersTable");
+                    }
                   }}
                   className={classes.submit}
                 >
