@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import InputMask from "react-input-mask";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
@@ -96,6 +96,13 @@ export default function SignUp(props) {
       setvalidateInfo({ ...validateInfo, password: true });
     }
   };
+
+  // useEffect(() => {
+  //   console.log(ctx);
+  //   // if (ctx.usuarioActual) {
+  //   //   history.replace("/signIn");
+  //   // }
+  // }, [ctx.usuarioActual]);
 
   //JSX Component
   return (

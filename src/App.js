@@ -40,6 +40,7 @@ import axiosInstance from "./axios/axios";
 import ConfirmDialog from "./components/Dialogs/ConfirmDialog";
 import Wraper from "./wraper";
 import moment from "moment";
+import ProtectedRoute from "utils/protectedRoutes";
 
 //Here we are importing the snackbar
 import { Button, Snackbar } from "@material-ui/core";
