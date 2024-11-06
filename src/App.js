@@ -396,10 +396,22 @@ function App() {
 
               <Route
                 exact
-                path="/HomeOperations"
-                render={() => <HomeOperations />}
+                path="/HomeAdmin"
+                render={() => (
+                  <ProtectedRoute allowedRoles={["Tecnología"]}>
+                    <HomeOperations />
+                  </ProtectedRoute>
+                )}
               />
-              <Route exact path="/HomeAdmin" render={() => <HomeAdmin />} />
+              <Route
+                exact
+                path="/HomeOperations"
+                render={() => (
+                  <ProtectedRoute allowedRoles={["Operaciones"]}>
+                    <HomeAdmin />
+                  </ProtectedRoute>
+                )}
+              />
               <Route exact path="/prueba" render={() => <Prueba />} />
               <Route
                 exact

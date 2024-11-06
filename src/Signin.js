@@ -254,9 +254,9 @@ export default withRouter(function SignIn({ usuarioActual }) {
     }
 
     if (department === "Operaciones") {
-      history.replace("/HomeAdmin");
-    } else {
       history.replace("/HomeOperations");
+    } else {
+      history.replace("/HomeAdmin");
     }
   };
   const cancelFormFunction = (e) => {

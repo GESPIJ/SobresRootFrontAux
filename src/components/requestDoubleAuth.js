@@ -104,8 +104,8 @@ export default function SignUp() {
       });
       let redirectPath =
         ctx.userAditionalInfo.department == "Administración"
-          ? "HomeOperations"
-          : "HomeAdmin";
+          ? "HomeAdmin"
+          : "HomeOperations";
       history.replace(redirectPath);
     } else {
       setvalidCode({

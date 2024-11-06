@@ -334,7 +334,7 @@ export default function Orders({ solitudes }) {
                   color="primary"
                   onClick={(e) => {
                     ctx.setpreviousPage("/solitudesTable");
-                    history.replace("/HomeAdmin");
+                    history.replace("/HomeOperations");
                   }}
                   className={classes.registerButton}
                 >

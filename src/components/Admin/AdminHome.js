@@ -9,7 +9,7 @@ import { IconButton, Card, CardHeader } from "@material-ui/core";
 import BarraNavegacion from "../BarraNavegacion";
 import MyContext from "../../context/mycontext";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import  { getSocket }  from "../../socket";
+import { getSocket } from "../../socket";
 
 //Component Styles
 const useStyles = makeStyles((theme) => ({
@@ -54,12 +54,10 @@ const Home = () => {
   const classes = useStyles();
   const classes2 = useStyles2();
 
-
   useEffect(() => {
     const socket = getSocket();
     ctx.setSocket(socket);
-  }, [])
-  
+  }, []);
 
   return (
     <div className="signup">
@@ -82,7 +80,7 @@ const Home = () => {
               <Card
                 className={classes2.card}
                 onClick={() => {
-                  ctx.setpreviousPage("/HomeAdmin");
+                  ctx.setpreviousPage("/HomeOperations");
                   history.replace("/newSolitude");
                 }}
               >
