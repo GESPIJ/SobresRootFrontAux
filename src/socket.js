@@ -8,7 +8,7 @@ const getSocket = () => {
   });
   return socket;
 };
-
+//asd
 const buildSocketMessage = (socket, event, parameter) => {
   let message;
   const { nm, system, expirationTime } = parameter || {};
