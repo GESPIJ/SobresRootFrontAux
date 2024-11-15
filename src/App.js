@@ -17,8 +17,8 @@ import SignUpUser from "./components/Admin/SignUpUser";
 import SignUpSystem from "./components/Admin/SignUpSystem";
 import SignUpPrinter from "./components/Admin/SignUpPrinter";
 import Identifier from "./components/Identifier";
-import HomeOperations from "./components/Operation/OperationsHome";
-import HomeAdmin from "./components/Admin/AdminHome";
+import HomeAdmin from "./components/Operation/OperationsHome";
+import HomeOperations from "./components/Admin/AdminHome";
 import NewSolitude from "./components/Operation/newSolitude";
 import WaitingForPrint from "./components/Operation/waitingForPrint";
 import TimeOutCounter from "./components/Operation/timeoutCounter";
@@ -399,7 +399,7 @@ function App() {
                 path="/HomeAdmin"
                 render={() => (
                   <ProtectedRoute allowedRoles={["Tecnología"]}>
-                    <HomeOperations />
+                    <HomeAdmin />
                   </ProtectedRoute>
                 )}
               />
@@ -408,7 +408,7 @@ function App() {
                 path="/HomeOperations"
                 render={() => (
                   <ProtectedRoute allowedRoles={["Operaciones"]}>
-                    <HomeAdmin />
+                    <HomeOperations />
                   </ProtectedRoute>
                 )}
               />

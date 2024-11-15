@@ -41,44 +41,62 @@ const Home = () => {
       });
     }
 
-    if(response?.data?.systems) ctx.setSystemsOwned(response.data.systems.reverse());
+    if (response?.data?.systems)
+      ctx.setSystemsOwned(response.data.systems.reverse());
   };
 
   let addNewSnackbar = (content, severity, parameter) => {
-    if(!content ) return;
+    if (!content) return;
 
-    const existingSnackbar = ctx.snackbar.find((item) => item.content === content); 
-    if(!existingSnackbar){
+    const existingSnackbar = ctx.snackbar.find(
+      (item) => item.content === content
+    );
+    if (!existingSnackbar) {
       ctx.setSnackbar((prev) => {
         return [...prev, { open: true, content: content, severity: severity }];
       });
     }
   };
 
-    useEffect(() => {
-      //Sockets logic
-      const socket = getSocket();
-      socket.on("close", () => {});
-  
-      socket.on("newRootEnvelope", (parameter) => {
-        if( parameter.nm ) addNewSnackbar( buildSocketMessage(socket, "newRootEnvelope", parameter), "success", parameter );
-      });
-  
-      socket.on("rootEnvelopeAboutToEnd", (parameter) => {
-         if( parameter.nm )addNewSnackbar( buildSocketMessage(socket, "rootEnvelopeAboutToEnd", parameter), "warning", parameter );
-      });
-  
-      socket.on("rootEnvelopeEnded", (parameter) => {
-        if( parameter.nm) addNewSnackbar( buildSocketMessage(socket, "rootEnvelopeEnded", parameter), "eror", parameter );
-     });
-    }, [ ]);
+  useEffect(() => {
+    //Sockets logic
+    const socket = getSocket();
+    socket.on("close", () => {});
+
+    socket.on("newRootEnvelope", (parameter) => {
+      if (parameter.nm)
+        addNewSnackbar(
+          buildSocketMessage(socket, "newRootEnvelope", parameter),
+          "success",
+          parameter
+        );
+    });
+
+    socket.on("rootEnvelopeAboutToEnd", (parameter) => {
+      if (parameter.nm)
+        addNewSnackbar(
+          buildSocketMessage(socket, "rootEnvelopeAboutToEnd", parameter),
+          "warning",
+          parameter
+        );
+    });
+
+    socket.on("rootEnvelopeEnded", (parameter) => {
+      if (parameter.nm)
+        addNewSnackbar(
+          buildSocketMessage(socket, "rootEnvelopeEnded", parameter),
+          "eror",
+          parameter
+        );
+    });
+  }, []);
 
   useEffect(() => {
     //Fetching systems associated with the user
     fetchSystems();
-    }, [ctx.usuarioActual]);
+  }, [ctx.usuarioActual]);
 
-  console.log("This is the user", ctx)
+  console.log("This is the user", ctx);
 
   return (
     <div className="signup">
@@ -102,7 +120,7 @@ const Home = () => {
               <Card
                 className={classes2.card}
                 onClick={() => {
-                  ctx.setpreviousPage("HomeOperations");
+                  ctx.setpreviousPage("homeAdmin");
                   history.replace("/signUpUser");
                 }}
               >
@@ -120,7 +138,7 @@ const Home = () => {
               <Card
                 className={classes2.card}
                 onClick={() => {
-                  ctx.setpreviousPage("HomeOperations");
+                  ctx.setpreviousPage("homeAdmin");
                   history.replace("/signUpSystem");
                 }}
               >
@@ -140,7 +158,7 @@ const Home = () => {
               <Card
                 className={classes2.card}
                 onClick={() => {
-                  ctx.setpreviousPage("HomeOperations");
+                  ctx.setpreviousPage("homeAdmin");
                   history.replace("/usersTable");
                 }}
               >
@@ -158,7 +176,7 @@ const Home = () => {
               <Card
                 className={classes2.card}
                 onClick={() => {
-                  ctx.setpreviousPage("HomeOperations");
+                  ctx.setpreviousPage("homeAdmin");
                   history.replace("/systemsTable");
                 }}
               >

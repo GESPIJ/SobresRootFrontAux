@@ -141,7 +141,7 @@ export default function Orders({ solitudes, fetchSystems }) {
               variant="contained"
               color="primary"
               onClick={(e) => {
-                history.replace("/HomeOperations");
+                history.replace("/HomeAdmin");
               }}
               className={classes.registerButton}
             >

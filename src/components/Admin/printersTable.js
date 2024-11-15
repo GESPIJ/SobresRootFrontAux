@@ -99,7 +99,7 @@ export default function Orders({ solitudes }) {
               variant="contained"
               color="primary"
               onClick={(e) => {
-                history.replace("/HomeOperations");
+                history.replace("/HomeAdmin");
               }}
               className={classes.registerButton}
             >

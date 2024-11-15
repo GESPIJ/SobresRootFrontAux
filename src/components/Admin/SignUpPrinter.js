@@ -77,7 +77,7 @@ export default function SignUp() {
         message: messageText,
         solitude: null,
       });
-      history.replace("/HomeOperations");
+      history.replace("/HomeAdmin");
     }
   };
 

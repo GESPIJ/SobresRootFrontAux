@@ -218,7 +218,7 @@ export default function SignUp() {
         autoHideDuration={3000}
         onClose={(e) => {
           if (snackBars.severity === "success") {
-            history.replace("/HomeOperations");
+            history.replace("/HomeAdmin");
           }
           setsnackBars({ ...snackBars, open: false });
         }}

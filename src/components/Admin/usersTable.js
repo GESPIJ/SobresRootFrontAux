@@ -120,7 +120,7 @@ export default function Orders({ solitudes, fetchSolitudes }) {
               color="primary"
               onClick={(e) => {
                 ctx.setpreviousPage("/usersTable");
-                history.replace("/HomeOperations");
+                history.replace("/HomeAdmin");
                 // registerUser(user);
               }}
               className={classes.registerButton}
