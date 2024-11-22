@@ -277,6 +277,14 @@ export default function SignUp(props) {
                     <MenuItem value={"Operaciones"}>Operaciones</MenuItem>
                     <MenuItem value={"Administración"}>Administración</MenuItem>
                     <MenuItem value={"Tecnología"}>Tecnología</MenuItem>
+                    <MenuItem
+                      value={"SuperAdmin"}
+                      disabled={ctx.department != "SuperAdmin"}
+                    >
+                      SuperAdmin
+                    </MenuItem>
+                    <MenuItem value={"Acceso"}>Acceso</MenuItem>
+                    <MenuItem value={"Cliente"}>Cliente</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>

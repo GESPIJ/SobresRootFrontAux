@@ -14,6 +14,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import { getSocket, buildSocketMessage } from "../../socket";
 //const axios = require("axios");
 import axios from "../../axios/axios";
+import { Assignment } from "@material-ui/icons";
 
 const useStyles2 = makeStyles({
   card: {
@@ -28,6 +29,7 @@ const Home = () => {
   const ctx = useContext(MyContext);
   const history = useHistory();
   const classes2 = useStyles2();
+  const userDepartment = ctx.userAditionalInfo.department;
 
   const fetchSystems = async () => {
     let response;
@@ -112,84 +114,133 @@ const Home = () => {
             //classes={classes.card}
             variant="h4"
           >
-            Administrador, seleccione una acción
+            Seleccione una acción
           </Typography>
           <Grid className={classes2.grid} container spacing={5}>
+            {ctx.userAditionalInfo.department === "Administración" ||
+            ctx.userAditionalInfo.department === "SuperAdmin" ||
+            ctx.userAditionalInfo.department === "Acceso<" ? (
+              <>
+                <Grid item xs={1} sm={1} md={1} lg={1}></Grid>
+
+                <Grid item xs={11} sm={5} md={5} lg={5}>
+                  <Card
+                    className={classes2.card}
+                    onClick={() => {
+                      ctx.setpreviousPage("homeAdmin");
+                      history.replace("/signUpUser");
+                    }}
+                  >
+                    <CardHeader
+                      title={"Registrar Usuario"}
+                      action={
+                        <IconButton>
+                          <PersonAdd />
+                        </IconButton>
+                      }
+                    />
+                  </Card>
+                </Grid>
+                <Grid item xs={11} sm={5} md={5} lg={5}>
+                  <Card
+                    className={classes2.card}
+                    onClick={() => {
+                      ctx.setpreviousPage("homeAdmin");
+                      history.replace("/signUpSystem");
+                    }}
+                  >
+                    <CardHeader
+                      title={"Registrar Sistema"}
+                      action={
+                        <IconButton>
+                          <Storage />
+                        </IconButton>
+                      }
+                    />
+                  </Card>
+                </Grid>
+                <Grid item xs={1} sm={1} md={1} lg={1}></Grid>
+                <Grid item xs={1} sm={1} md={1} lg={1}></Grid>
+                <Grid item xs={11} sm={5} md={5} lg={5}>
+                  <Card
+                    className={classes2.card}
+                    onClick={() => {
+                      ctx.setpreviousPage("homeAdmin");
+                      history.replace("/usersTable");
+                    }}
+                  >
+                    <CardHeader
+                      title={"Modificar Usuario"}
+                      action={
+                        <IconButton>
+                          <PersonAdd />
+                        </IconButton>
+                      }
+                    />
+                  </Card>
+                </Grid>
+                <Grid item xs={12} sm={5} md={5} lg={5}>
+                  <Card
+                    className={classes2.card}
+                    onClick={() => {
+                      ctx.setpreviousPage("homeAdmin");
+                      history.replace("/systemsTable");
+                    }}
+                  >
+                    <CardHeader
+                      title={"Modificar Sistema"}
+                      action={
+                        <IconButton>
+                          <Storage />
+                        </IconButton>
+                      }
+                    />
+                  </Card>
+                </Grid>
+              </>
+            ) : null}
             <Grid item xs={1} sm={1} md={1} lg={1}></Grid>
-            <Grid item xs={11} sm={5} md={5} lg={5}>
-              <Card
-                className={classes2.card}
-                onClick={() => {
-                  ctx.setpreviousPage("homeAdmin");
-                  history.replace("/signUpUser");
-                }}
-              >
-                <CardHeader
-                  title={"Registrar Usuario"}
-                  action={
-                    <IconButton>
-                      <PersonAdd />
-                    </IconButton>
-                  }
-                />
-              </Card>
-            </Grid>
-            <Grid item xs={11} sm={5} md={5} lg={5}>
-              <Card
-                className={classes2.card}
-                onClick={() => {
-                  ctx.setpreviousPage("homeAdmin");
-                  history.replace("/signUpSystem");
-                }}
-              >
-                <CardHeader
-                  title={"Registrar Sistema"}
-                  action={
-                    <IconButton>
-                      <Storage />
-                    </IconButton>
-                  }
-                />
-              </Card>
-            </Grid>
             <Grid item xs={1} sm={1} md={1} lg={1}></Grid>
-            <Grid item xs={1} sm={1} md={1} lg={1}></Grid>
-            <Grid item xs={11} sm={5} md={5} lg={5}>
-              <Card
-                className={classes2.card}
-                onClick={() => {
-                  ctx.setpreviousPage("homeAdmin");
-                  history.replace("/usersTable");
-                }}
-              >
-                <CardHeader
-                  title={"Modificar Usuario"}
-                  action={
-                    <IconButton>
-                      <PersonAdd />
-                    </IconButton>
-                  }
-                />
-              </Card>
-            </Grid>
-            <Grid item xs={12} sm={5} md={5} lg={5}>
-              <Card
-                className={classes2.card}
-                onClick={() => {
-                  ctx.setpreviousPage("homeAdmin");
-                  history.replace("/systemsTable");
-                }}
-              >
-                <CardHeader
-                  title={"Modificar Sistema"}
-                  action={
-                    <IconButton>
-                      <Storage />
-                    </IconButton>
-                  }
-                />
-              </Card>
-            </Grid>
+            {ctx.userAditionalInfo.department === "Administración" ? (
+              <>
+                <Grid item xs={12} sm={5} md={5} lg={5}>
+                  <Card
+                    className={classes2.card}
+                    onClick={() => {
+                      ctx.setpreviousPage("homeAdmin");
+                      history.replace("/newSolitude");
+                    }}
+                  >
+                    <CardHeader
+                      title={"Nueva solicitud"}
+                      action={
+                        <IconButton>
+                          <Assignment />
+                        </IconButton>
+                      }
+                    />
+                  </Card>
+                </Grid>
+                <Grid item xs={12} sm={5} md={5} lg={5}>
+                  <Card
+                    className={classes2.card}
+                    onClick={() => {
+                      ctx.setpreviousPage("homeAdmin");
+                      history.replace("/solitudesTable");
+                    }}
+                  >
+                    <CardHeader
+                      title={"Ver solicitudes"}
+                      action={
+                        <IconButton>
+                          <Assignment />
+                        </IconButton>
+                      }
+                    />
+                  </Card>
+                </Grid>
+              </>
+            ) : null}
           </Grid>
         </Container>
       </div>

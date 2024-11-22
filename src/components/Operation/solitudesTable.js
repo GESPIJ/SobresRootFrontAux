@@ -68,8 +68,8 @@ export default function Orders({ solitudes }) {
 
   const solitudesPaginated = solitudes ? solitudes.slice(0, 5) : [];
   const [listOfSolitudes, setlistOfSolitudes] = useState(solitudesPaginated);
+  const previousPage = ctx.previousPage;
   const history = useHistory();
-
   //Component Functions
 
   //Function for formatting the title for the current solitude beign shown
@@ -334,7 +334,15 @@ export default function Orders({ solitudes }) {
                   color="primary"
                   onClick={(e) => {
                     ctx.setpreviousPage("/solitudesTable");
-                    history.replace("/HomeOperations");
+
+                    if (
+                      ctx.userAditionalInfo.department === "Administración" ||
+                      ctx.userAditionalInfo.department === "Tecnología"
+                    ) {
+                      history.replace("/homeAdmin");
+                    } else {
+                      history.replace("/HomeOperations");
+                    }
                   }}
                   className={classes.registerButton}
                 >

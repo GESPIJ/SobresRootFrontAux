@@ -398,7 +398,14 @@ function App() {
                 exact
                 path="/HomeAdmin"
                 render={() => (
-                  <ProtectedRoute allowedRoles={["Tecnología"]}>
+                  <ProtectedRoute
+                    allowedRoles={[
+                      "Tecnología",
+                      "SuperAdmin",
+                      "Acceso",
+                      "Administración",
+                    ]}
+                  >
                     <HomeAdmin />
                   </ProtectedRoute>
                 )}
@@ -407,7 +414,14 @@ function App() {
                 exact
                 path="/HomeOperations"
                 render={() => (
-                  <ProtectedRoute allowedRoles={["Operaciones"]}>
+                  <ProtectedRoute
+                    allowedRoles={[
+                      "Operaciones",
+                      "Tecnología",
+                      "Cliente",
+                      "Operaciones",
+                    ]}
+                  >
                     <HomeOperations />
                   </ProtectedRoute>
                 )}

@@ -53,6 +53,7 @@ const Home = () => {
   const history = useHistory();
   const classes = useStyles();
   const classes2 = useStyles2();
+  const userDepartment = ctx.userAditionalInfo.department;
 
   useEffect(() => {
     const socket = getSocket();
