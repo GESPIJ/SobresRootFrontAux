@@ -119,7 +119,8 @@ const Home = () => {
           <Grid className={classes2.grid} container spacing={5}>
             {ctx.userAditionalInfo.department === "Administración" ||
             ctx.userAditionalInfo.department === "SuperAdmin" ||
-            ctx.userAditionalInfo.department === "Acceso<" ? (
+            ctx.userAditionalInfo.department === "Acceso" ||
+            ctx.userAditionalInfo.department === "Tecnología" ? (
               <>
                 <Grid item xs={1} sm={1} md={1} lg={1}></Grid>
 

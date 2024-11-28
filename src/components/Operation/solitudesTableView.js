@@ -17,7 +17,10 @@ export default function SignUp() {
   const [loading, setloading] = useState(true);
 
   const fetchSystems = async () => {
-    const payload = { nm: ctx.nmActual };
+    const payload = {
+      nm: ctx.nmActual,
+      department: ctx.userAditionalInfo.department,
+    };
     console.log(payload);
 
     //Server Response
