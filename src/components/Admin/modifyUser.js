@@ -277,12 +277,16 @@ export default function SignUp(props) {
                     <MenuItem value={"Operaciones"}>Operaciones</MenuItem>
                     <MenuItem value={"Administración"}>Administración</MenuItem>
                     <MenuItem value={"Tecnología"}>Tecnología</MenuItem>
-                    <MenuItem
-                      value={"SuperAdmin"}
-                      disabled={ctx.department != "SuperAdmin"}
-                    >
-                      SuperAdmin
-                    </MenuItem>
+                    <>
+                      {ctx.department == "SuperAdmin" ? (
+                        <MenuItem
+                          value={"SuperAdmin"}
+                          disabled={ctx.department != "SuperAdmin"}
+                        >
+                          SuperAdmin
+                        </MenuItem>
+                      ) : null}
+                    </>
                     <MenuItem value={"Acceso"}>Acceso</MenuItem>
                     <MenuItem value={"Cliente"}>Cliente</MenuItem>
                   </Select>
