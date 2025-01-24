@@ -33,11 +33,11 @@ const Home = () => {
 
   const fetchSystems = async () => {
     let response;
-    if (ctx.userAditionalInfo.department === "Administración") {
+    if (userDepartment === "Administración") {
       response = await axios.post("/admin/getSystemByNMSecurity", {
         id: ctx.userAditionalInfo.id,
       });
-    } else if (ctx.userAditionalInfo.department === "Tecnología") {
+    } else if (userDepartment === "Tecnología") {
       response = await axios.post("/admin/getSystemByNMTecnologie", {
         id: ctx.userAditionalInfo.id,
       });

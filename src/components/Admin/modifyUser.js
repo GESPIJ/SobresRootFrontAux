@@ -97,12 +97,13 @@ export default function SignUp(props) {
     department,
   }) => {
     const payload = {
+      nm: ctx.userAditionalInfo.nm,
       id,
       name,
       lastname,
       mail,
       newPassword,
-      nm,
+      userNM: nm,
       department,
     };
 

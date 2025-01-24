@@ -255,8 +255,10 @@ export default withRouter(function SignIn({ usuarioActual }) {
 
     if (department === "Operaciones") {
       history.replace("/HomeOperations");
-    } else {
+    } else if (department === "Administración" || department === "SuperAdmin") {
       history.replace("/HomeAdmin");
+    } else if (department === "Cliente") {
+      history.replace("/HomeClient");
     }
   };
   const cancelFormFunction = (e) => {

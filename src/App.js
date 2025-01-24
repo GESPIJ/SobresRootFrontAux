@@ -41,6 +41,8 @@ import ConfirmDialog from "./components/Dialogs/ConfirmDialog";
 import Wraper from "./wraper";
 import moment from "moment";
 import ProtectedRoute from "utils/protectedRoutes";
+import OperationsHome from "./components/Operations2/OperationsHome";
+import ClientHome from "./components/Client/ClientHome";
 
 //Here we are importing the snackbar
 import { Button, Snackbar } from "@material-ui/core";
@@ -423,6 +425,24 @@ function App() {
                     ]}
                   >
                     <HomeOperations />
+                  </ProtectedRoute>
+                )}
+              />
+              <Route
+                exact
+                path="/HomeOperations2"
+                render={() => (
+                  <ProtectedRoute allowedRoles={["Operaciones"]}>
+                    <OperationsHome />
+                  </ProtectedRoute>
+                )}
+              />
+              <Route
+                exact
+                path="/HomeClient"
+                render={() => (
+                  <ProtectedRoute allowedRoles={["Cliente"]}>
+                    <ClientHome />
                   </ProtectedRoute>
                 )}
               />
